@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import pandas as pd
 import sys
-import csv
+
 
 import readTempData
 import dummi_readSensorData as rSD
@@ -36,12 +36,11 @@ class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = self.load_ui()
-        self.writeT1.setVisible(False)
-        self.writeT2.setVisible(False)
-        self.writeT3.setVisible(False)
-        self.writeT4.setVisible(False)
-        self.writeP1.setVisible(False)
-        self.writeP2.setVisible(False)
+        self.writeList = [self.writeT1, self.writeT2, self.writeT3, self.writeT4, self.writeP1, self.writeP1, self.writeP2]
+        for i in self.writeList:
+            i.setVisible(False)
+        self.checkSaveList = [self.checkSaveT1, self.checkSaveT2, self.checkSaveT3, self.checkSaveT4, self.checkSaveP1, self.checkSaveP2]
+
         self.valueT1.setText('%.1f °C' % 0)
         self.valueT2.setText('%.1f °C' % 0)
         self.valueT3.setText('%.1f °C' % 0)
@@ -62,7 +61,7 @@ class MainWindow(QWidget):
         # l = QVBoxLayout(self.plotWidget)
         # l.addWidget(self.canvas)
         self.temp1 = readTempData.ReadTempData()
-        self.dummiSensor = rSD.ReadTemperature()
+        #self.dummiSensor = rSD.ReadTemperature()
     """
     def plotUpdate(self):
         try:
@@ -127,12 +126,9 @@ class MainWindow(QWidget):
             if self.checkSaveT4.isChecked() is True:
                 self.d['T4 / [°C]'] = []
                 self.writeT4.setVisible(True)
-            self.checkSaveT1.setVisible(False)
-            self.checkSaveT2.setVisible(False)
-            self.checkSaveT3.setVisible(False)
-            self.checkSaveT4.setVisible(False)
-            self.checkSaveP1.setVisible(False)
-            self.checkSaveP2.setVisible(False)
+            for box in self.checkSaveList:
+                box.setVisible(False)
+
             self.saveBtn.setText("Stop saving Data")
             self.saveBtn.setStyleSheet("""background-color:red;
                 border-radius:10px; font: 12pt "Ubuntu";""")
@@ -141,28 +137,22 @@ class MainWindow(QWidget):
             self.d = {}
             print(df)
             _now = time.time()
-            fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now))
-            fileNameComment = fileName + '_comment.txt'
-            fileNameData = fileName + '_data.csv'
-            path = os.fspath(Path(__file__).resolve().parent / "data" / fileNameData)
+            fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now))+ '_data.csv'
+
+            path = os.fspath(Path(__file__).resolve().parent / "data" / fileName)
             f = open(path, 'w')
 
             f.write(self.kommentar.toPlainText())
+            f.write('\n')
             f.close()
-            path = os.fspath(Path(__file__).resolve().parent / "data" / fileNameData)
+            #path = os.fspath(Path(__file__).resolve().parent / "data" / fileName)
             df.to_csv(path, mode='a')
-            self.writeT1.setVisible(False)
-            self.writeT2.setVisible(False)
-            self.writeT3.setVisible(False)
-            self.writeT4.setVisible(False)
-            self.writeP1.setVisible(False)
-            self.writeP2.setVisible(False)
-            self.checkSaveT1.setVisible(True)
-            self.checkSaveT2.setVisible(True)
-            self.checkSaveT3.setVisible(True)
-            self.checkSaveT4.setVisible(True)
-            self.checkSaveP1.setVisible(True)
-            self.checkSaveP2.setVisible(True)
+            for i in self.writeList:
+                i.setVisible(False)
+
+            for box in self.checkSaveList:
+                box.setVisible(True)
+
             self.saving = False
             self.saveBtn.setText("Start saving Data")
             self.saveBtn.setStyleSheet("""background-color:white;
