@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import pandas as pd
 import sys
+import csv
 
 import readTempData
 import dummi_readSensorData as rSD
@@ -39,6 +40,8 @@ class MainWindow(QWidget):
         self.writeT2.setVisible(False)
         self.writeT3.setVisible(False)
         self.writeT4.setVisible(False)
+        self.writeP1.setVisible(False)
+        self.writeP2.setVisible(False)
         self.valueT1.setText('%.1f °C' % 0)
         self.valueT2.setText('%.1f °C' % 0)
         self.valueT3.setText('%.1f °C' % 0)
@@ -54,9 +57,10 @@ class MainWindow(QWidget):
         self.qTimer.timeout.connect(self.getSensorData)
         self.qTimer.start()
         self.saveBtn.clicked.connect(self.writeData)
-        self.canvas = MplCanvas(self)
-        l = QVBoxLayout(self.plotWidget)
-        l.addWidget(self.canvas)
+        self.stopBtn.clicked.connect(self.stopExit)
+        # self.canvas = MplCanvas(self)
+        # l = QVBoxLayout(self.plotWidget)
+        # l.addWidget(self.canvas)
         self.temp1 = readTempData.ReadTempData()
         self.dummiSensor = rSD.ReadTemperature()
 
@@ -85,9 +89,11 @@ class MainWindow(QWidget):
         self.sensorList[self.step].setText('%.1f °C' % self.value[self.step])
         self.step += 1
         self.step_plot += 1
+        """
         if self.step_plot >40:
             self.plotUpdate()
             self.step_plot = 0
+        """
         if self.step > len(self.sensorList) - 1:
             self.step = 0
             #self.plotUpdate()
@@ -124,6 +130,8 @@ class MainWindow(QWidget):
             self.checkSaveT2.setVisible(False)
             self.checkSaveT3.setVisible(False)
             self.checkSaveT4.setVisible(False)
+            self.checkSaveP1.setVisible(False)
+            self.checkSaveP2.setVisible(False)
             self.saveBtn.setText("Stop saving Data")
             self.saveBtn.setStyleSheet("""background-color:red;
                 border-radius:10px; font: 12pt "Ubuntu";""")
@@ -132,21 +140,37 @@ class MainWindow(QWidget):
             self.d = {}
             print(df)
             _now = time.time()
-            fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now)) + '.csv'
-            path = os.fspath(Path(__file__).resolve().parent / "data" / fileName)
-            df.to_csv(path)
+            fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now))
+            fileNameComment = fileName + '_comment.txt'
+            fileNameData = fileName + '_data.csv'
+            path = os.fspath(Path(__file__).resolve().parent / "data" / fileNameData)
+            f = open(path, 'w')
+
+            f.write(self.kommentar.toPlainText())
+            f.close()
+            path = os.fspath(Path(__file__).resolve().parent / "data" / fileNameData)
+            df.to_csv(path, mode='a')
             self.writeT1.setVisible(False)
             self.writeT2.setVisible(False)
             self.writeT3.setVisible(False)
             self.writeT4.setVisible(False)
+            self.writeP1.setVisible(False)
+            self.writeP2.setVisible(False)
             self.checkSaveT1.setVisible(True)
             self.checkSaveT2.setVisible(True)
             self.checkSaveT3.setVisible(True)
             self.checkSaveT4.setVisible(True)
+            self.checkSaveP1.setVisible(True)
+            self.checkSaveP2.setVisible(True)
             self.saving = False
             self.saveBtn.setText("Start saving Data")
             self.saveBtn.setStyleSheet("""background-color:white;
                 border-radius:10px; font: 12pt "Ubuntu";""")
+
+
+    def stopExit(self):
+        self.temp1.close()
+        sys.exit(0)
 
 
 if __name__ == "__main__":
@@ -156,4 +180,5 @@ if __name__ == "__main__":
     try:
         sys.exit(app.exec_())
     except Exception:
+
         print("Exiting")
