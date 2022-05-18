@@ -9,11 +9,11 @@ import csv
 import readTempData
 import dummi_readSensorData as rSD
 
-import matplotlib
-matplotlib.use('Qt5Agg')
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-import matplotlib.ticker as ticker
+#import matplotlib
+#matplotlib.use('Qt5Agg')
+#from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+#from matplotlib.figure import Figure
+#import matplotlib.ticker as ticker
 import numpy as np
 
 
@@ -23,7 +23,7 @@ from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QWidget, QVBo
 from PyQt5.QtCore import QTimer
 
 
-
+"""
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
@@ -31,7 +31,7 @@ class MplCanvas(FigureCanvas):
         super(MplCanvas, self).__init__(fig)
         fig.tight_layout()
         self.axes.set_ylabel('T / [°C]')
-
+"""
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -63,7 +63,7 @@ class MainWindow(QWidget):
         # l.addWidget(self.canvas)
         self.temp1 = readTempData.ReadTempData()
         self.dummiSensor = rSD.ReadTemperature()
-
+    """
     def plotUpdate(self):
         try:
             self.plotdata = np.vstack((self.plotdata, float(self.valueT1.text().split(' ')[0])))
@@ -78,6 +78,7 @@ class MainWindow(QWidget):
         self.canvas.axes.set_autoscale_on(True)  #set_ylim( ymin=0, ymax=100)
         self.canvas.axes.plot(self.ydata, color=(0,1,0.29))
         self.canvas.draw()
+    """
 
     def load_ui(self):
         path = os.fspath(Path(__file__).resolve().parent / "form.ui")
