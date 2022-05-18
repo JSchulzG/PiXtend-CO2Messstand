@@ -84,6 +84,11 @@ class MainWindow(QWidget):
         loadUi(path, self)
 
     def getSensorData(self):
+        """
+        Das macht so keinen Sinn mit der Schleife, da jedesmal alle Daten geholt werden.
+        Sehr viel Zeitverschwendung!!!
+        ToDo: die Werte jede Runde an sensorList uebergeben und ggf. speichern.
+        """
         #self.value = self.dummiSensor.getData()
         self.value = self.temp1.read_Data()
         self.sensorList[self.step].setText('%.1f °C' % self.value[self.step])
@@ -145,7 +150,7 @@ class MainWindow(QWidget):
             f.write(self.kommentar.toPlainText())
             f.write('\n')
             f.close()
-            #path = os.fspath(Path(__file__).resolve().parent / "data" / fileName)
+
             df.to_csv(path, mode='a')
             for i in self.writeList:
                 i.setVisible(False)
