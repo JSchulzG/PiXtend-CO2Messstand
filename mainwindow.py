@@ -91,13 +91,29 @@ class MainWindow(QWidget):
         """
         #self.value = self.dummiSensor.getData()
         self.value = self.temp1.read_Data()
-        self.sensorList[self.step].setText('%.1f °C' % self.value[self.step])
-        self.step += 1
-        self.step_plot += 1
+        for i in range(4):
+            self.sensorList[i].setText('%.1f °C' % self.value[i])
+        # self.sensorList[self.step].setText('%.1f °C' % self.value[self.step])
+        if self.saving is True:
+            _now = time.time()
+            t = time.strftime('%Y%m%d %X', time.localtime(_now)) + ':' + str('%.3f' % _now).split('.')[1]
+            self.d['Time'].append(t)
+            if self.checkSaveT1.isChecked() is True:
+                self.d['T1 / [°C]'].append(self.valueT1.text().split(' ')[0])
+            if self.checkSaveT2.isChecked() is True:
+                self.d['T2 / [°C]'].append(self.valueT2.text().split(' ')[0])
+            if self.checkSaveT3.isChecked() is True:
+                self.d['T3 / [°C]'].append(self.valueT3.text().split(' ')[0])
+            if self.checkSaveT4.isChecked() is True:
+                self.d['T4 / [°C]'].append(self.valueT4.text().split(' ')[0])
+
+        #self.step += 1
+        #self.step_plot += 1
         """
         if self.step_plot >40:
             self.plotUpdate()
             self.step_plot = 0
+        """
         """
         if self.step > len(self.sensorList) - 1:
             self.step = 0
@@ -114,6 +130,7 @@ class MainWindow(QWidget):
                     self.d['T3 / [°C]'].append(self.valueT3.text().split(' ')[0])
                 if self.checkSaveT4.isChecked() is True:
                     self.d['T4 / [°C]'].append(self.valueT4.text().split(' ')[0])
+          """
 
     def writeData(self):
         if self.saving is False or self.saving is None:
