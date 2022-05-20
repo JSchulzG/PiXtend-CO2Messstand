@@ -45,7 +45,7 @@ class MainWindow(QWidget):
         self.valueT2.setText('%.1f °C' % 0)
         self.valueT3.setText('%.1f °C' % 0)
         self.valueT4.setText('%.1f °C' % 0)
-        self.sensorList = [self.valueT1, self.valueT2, self.valueT3, self.valueT4]
+        self.sensorList = [self.valueT1, self.valueT2, self.valueT3, self.valueT4, self.valueP1, self.valueP2]
         self.step = 0
         self.step_plot = 0
         self.value = 0.0
@@ -91,8 +91,11 @@ class MainWindow(QWidget):
         """
         #self.value = self.dummiSensor.getData()
         self.value = self.temp1.read_Data()
-        for i in range(4):
-            self.sensorList[i].setText('%.1f °C' % self.value[i])
+        for i in range(6):
+            if i < 4:
+                self.sensorList[i].setText('%.1f °C' % self.value[i])
+            else:
+                self.sensorList[i].setText('%.1f Bar' % self.value[i])
         # self.sensorList[self.step].setText('%.1f °C' % self.value[self.step])
         if self.saving is True:
             _now = time.time()
@@ -106,10 +109,17 @@ class MainWindow(QWidget):
                 self.d['T3 / [°C]'].append(self.valueT3.text().split(' ')[0])
             if self.checkSaveT4.isChecked() is True:
                 self.d['T4 / [°C]'].append(self.valueT4.text().split(' ')[0])
+            if self.checkSaveP1.isChecked() is True:
+                self.d['P1 / [Bar]'].append(self.valueP1.text().split(' ')[0])
+            if self.checkSaveP2.isChecked() is True:
+                self.d['P2 / [Bar]'].append(self.valueP2.text().split(' ')[0])
+
 
         #self.step += 1
         #self.step_plot += 1
-        """
+        """            if self.checkSaveP1.isChecked() is True:
+            self.d['P1 / [Bar]'] = []
+            self.writeP1.setVisible(True)
         if self.step_plot >40:
             self.plotUpdate()
             self.step_plot = 0
@@ -148,6 +158,12 @@ class MainWindow(QWidget):
             if self.checkSaveT4.isChecked() is True:
                 self.d['T4 / [°C]'] = []
                 self.writeT4.setVisible(True)
+            if self.checkSaveP1.isChecked() is True:
+                self.d['P1 / [Bar]'] = []
+                self.writeP1.setVisible(True)
+            if self.checkSaveP2.isChecked() is True:
+                self.d['P2 / [Bar]'] = []
+                self.writeP2.setVisible(True)
             for box in self.checkSaveList:
                 box.setVisible(False)
 
@@ -161,7 +177,8 @@ class MainWindow(QWidget):
             _now = time.time()
             fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now))+ '_data.csv'
 
-            path = os.fspath(Path(__file__).resolve().parent / "data" / fileName)
+            #path = os.fspath(Path(__file__).resolve().parent / "data" / fileName)
+            path = "/home/pi/Desktop/daten/" + fileName
             f = open(path, 'w')
 
             f.write(self.kommentar.toPlainText())
