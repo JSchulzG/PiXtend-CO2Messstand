@@ -9,11 +9,11 @@ import sys
 import readTempData
 import dummi_readSensorData as rSD
 
-#import matplotlib
-#matplotlib.use('Qt5Agg')
-#from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-#from matplotlib.figure import Figure
-#import matplotlib.ticker as ticker
+import matplotlib
+matplotlib.use('Qt5Agg')
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.ticker as ticker
 import numpy as np
 
 
@@ -23,15 +23,15 @@ from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QWidget, QVBo
 from PyQt5.QtCore import QTimer
 
 
-"""
+
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(MplCanvas, self).__init__(fig)
-        fig.tight_layout()
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111)
+        super(MplCanvas, self).__init__(self.fig)
+        self.fig.tight_layout()
         self.axes.set_ylabel('T / [°C]')
-"""
+
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -57,27 +57,36 @@ class MainWindow(QWidget):
         self.qTimer.start()
         self.saveBtn.clicked.connect(self.writeData)
         self.stopBtn.clicked.connect(self.stopExit)
-        # self.canvas = MplCanvas(self)
-        # l = QVBoxLayout(self.plotWidget)
-        # l.addWidget(self.canvas)
+        self.canvas = MplCanvas(self)
+        l = QVBoxLayout(self.plot2Widget)
+        l.addWidget(self.canvas)
         self.temp1 = readTempData.ReadTempData()
         #self.dummiSensor = rSD.ReadTemperature()
-    """
+
     def plotUpdate(self):
         try:
-            self.plotdata = np.vstack((self.plotdata, float(self.valueT1.text().split(' ')[0])))
+            self.plotdata = np.vstack((self.plotdata, float(self.valueT3.text().split(' ')[0])))[-100:]
+            self.plotdataT4 = np.vstack((self.plotdataT4, float(self.valueT4.text().split(' ')[0])))[-100:]
+
         except:
             # first data point
-            self.plotdata = np.array([[(float(self.valueT1.text().split(' ')[0]))]])
-        self.ydata = self.plotdata[:]
+            print('except')
+            self.plotdata = np.array([[(float(self.valueT3.text().split(' ')[0]))]])
+            self.plotdataT4 = np.array([[(float(self.valueT4.text().split(' ')[0]))]])
+        self.ydata = self.plotdata
+
+        self.canvas.axes.clear()
         self.canvas.axes.set_facecolor((0, 0, 0))
         self.canvas.axes.yaxis.grid(True, linestyle='--')
         start, end = self.canvas.axes.get_ylim()
         self.canvas.axes.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
         self.canvas.axes.set_autoscale_on(True)  #set_ylim( ymin=0, ymax=100)
+
         self.canvas.axes.plot(self.ydata, color=(0,1,0.29))
+        self.canvas.axes.plot(self.plotdataT4, color=(1,0,0))
         self.canvas.draw()
-    """
+        self.canvas.flush_events()
+
 
     def load_ui(self):
         path = os.fspath(Path(__file__).resolve().parent / "form.ui")
@@ -116,14 +125,15 @@ class MainWindow(QWidget):
 
 
         #self.step += 1
-        #self.step_plot += 1
+        self.step_plot += 1
         """            if self.checkSaveP1.isChecked() is True:
             self.d['P1 / [Bar]'] = []
             self.writeP1.setVisible(True)
-        if self.step_plot >40:
+        """
+        if self.step_plot >10:
             self.plotUpdate()
             self.step_plot = 0
-        """
+
         """
         if self.step > len(self.sensorList) - 1:
             self.step = 0
