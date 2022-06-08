@@ -119,20 +119,20 @@ class MainWindow(QWidget):
         # self.sensorList[self.step].setText('%.1f °C' % self.value[self.step])
         if self.saving is True:
             _now = time.time()
-            t = time.strftime('%Y%m%d %X', time.localtime(_now)) + ':' + str('%.3f' % _now).split('.')[1]
+            t = time.strftime('%X', time.localtime(_now)) + '.' + str('%.3f' % _now).split('.')[1]
             self.d['Time'].append(t)
             if self.checkSaveT1.isChecked() is True:
-                self.d['T1 / [°C]'].append(self.valueT1.text().split(' ')[0])
+                self.d['T1/[°C]'].append(self.valueT1.text().split(' ')[0])
             if self.checkSaveT2.isChecked() is True:
-                self.d['T2 / [°C]'].append(self.valueT2.text().split(' ')[0])
+                self.d['T2/[°C]'].append(self.valueT2.text().split(' ')[0])
             if self.checkSaveT3.isChecked() is True:
-                self.d['T3 / [°C]'].append(self.valueT3.text().split(' ')[0])
+                self.d['T3/[°C]'].append(self.valueT3.text().split(' ')[0])
             if self.checkSaveT4.isChecked() is True:
-                self.d['T4 / [°C]'].append(self.valueT4.text().split(' ')[0])
+                self.d['T4/[°C]'].append(self.valueT4.text().split(' ')[0])
             if self.checkSaveP1.isChecked() is True:
-                self.d['P1 / [Bar]'].append(self.valueP1.text().split(' ')[0])
+                self.d['P1/[Bar]'].append(self.valueP1.text().split(' ')[0])
             if self.checkSaveP2.isChecked() is True:
-                self.d['P2 / [Bar]'].append(self.valueP2.text().split(' ')[0])
+                self.d['P2/[Bar]'].append(self.valueP2.text().split(' ')[0])
 
 
         #self.step += 1
@@ -153,22 +153,22 @@ class MainWindow(QWidget):
             self.saving = True
             self.d['Time'] = []
             if self.checkSaveT1.isChecked() is True:
-                self.d['T1 / [°C]'] = []
+                self.d['T1/[°C]'] = []
                 self.writeT1.setVisible(True)
             if self.checkSaveT2.isChecked() is True:
-                self.d['T2 / [°C]'] = []
+                self.d['T2/[°C]'] = []
                 self.writeT2.setVisible(True)
             if self.checkSaveT3.isChecked() is True:
-                self.d['T3 / [°C]'] = []
+                self.d['T3/[°C]'] = []
                 self.writeT3.setVisible(True)
             if self.checkSaveT4.isChecked() is True:
-                self.d['T4 / [°C]'] = []
+                self.d['T4/[°C]'] = []
                 self.writeT4.setVisible(True)
             if self.checkSaveP1.isChecked() is True:
-                self.d['P1 / [Bar]'] = []
+                self.d['P1/[Bar]'] = []
                 self.writeP1.setVisible(True)
             if self.checkSaveP2.isChecked() is True:
-                self.d['P2 / [Bar]'] = []
+                self.d['P2/[Bar]'] = []
                 self.writeP2.setVisible(True)
             for box in self.checkSaveList:
                 box.setVisible(False)
