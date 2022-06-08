@@ -304,14 +304,20 @@ border: 2px solid;</string>
        </widget>
       </item>
       <item row="7" column="3">
-       <widget class="QSlider" name="horizontalSlider">
+       <widget class="QSlider" name="sliderPosition">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
       <item row="7" column="7">
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="valuePosition">
+        <property name="styleSheet">
+         <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
+border-color: rgb(0, 0, 0);
+border: 2px solid;</string>
+        </property>
+       </widget>
       </item>
       <item row="8" column="4" colspan="4">
        <widget class="QWidget" name="plot2Widget" native="true"/>
@@ -384,8 +390,8 @@ font: 12pt &quot;Ubuntu&quot;;</string>
      <zorder>checkSaveP2</zorder>
      <zorder>label_P1</zorder>
      <zorder>label_P2</zorder>
-     <zorder>horizontalSlider</zorder>
-     <zorder>lineEdit</zorder>
+     <zorder>sliderPosition</zorder>
+     <zorder>valuePosition</zorder>
      <zorder>plot2Widget</zorder>
     </widget>
    </item>
