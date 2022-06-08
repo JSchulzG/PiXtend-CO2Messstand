@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import sys
 
-
+import RPi.GPIO as GPIO
 import readTempData
 import dummi_readSensorData as rSD
 
@@ -21,6 +21,8 @@ from PyQt5 import QtWidgets
 from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QWidget, QVBoxLayout
 from PyQt5.QtCore import QTimer
+
+
 
 
 """
@@ -40,6 +42,18 @@ class MainWindow(QWidget):
         for i in self.writeList:
             i.setVisible(False)
         self.checkSaveList = [self.checkSaveT1, self.checkSaveT2, self.checkSaveT3, self.checkSaveT4, self.checkSaveP1, self.checkSaveP2]
+
+        #GPIO Mode (BOARD / BCM)
+        GPIO.setmode(GPIO.BCM)
+        #set GPIO Pins
+        self.GPIO_TRIGGER = 21
+        self.GPIO_ECHO = 19
+        #GPIO.setwarnings(False)
+        #set GPIO direction (IN / OUT)
+        GPIO.setup(self.GPIO_TRIGGER, GPIO.OUT)
+        GPIO.setup(self.GPIO_ECHO, GPIO.IN)
+        self.sliderPosition.setMinimum(80)
+        self.sliderPosition.setMaximum(280)
 
         self.valueT1.setText('%.1f °C' % 0)
         self.valueT2.setText('%.1f °C' % 0)
@@ -99,6 +113,35 @@ class MainWindow(QWidget):
         self.canvas.flush_events()
         """
 
+    def distance(self):
+            # set Trigger to HIGH
+            #print('start')
+        GPIO.output(self.GPIO_TRIGGER, True)
+
+            # set Trigger after 0.01ms to LOW
+        time.sleep(0.00001)
+        GPIO.output(self.GPIO_TRIGGER, False)
+        StartTime = time.time()
+        StopTime = time.time()
+
+            # save StartTime
+        while GPIO.input(self.GPIO_ECHO) == 0:
+            StartTime = time.time()
+
+            # save time of arrival
+        while GPIO.input(self.GPIO_ECHO) == 1:
+            StopTime = time.time()
+
+            # time difference between start and arrival
+        TimeElapsed = StopTime - StartTime
+            # multiply with the sonic speed (34300 cm/s)
+            # and divide by 2, because there and back
+        distance = (TimeElapsed * 34300) / 2
+
+        return distance
+
+
+
     def load_ui(self):
         path = os.fspath(Path(__file__).resolve().parent / "form.ui")
         loadUi(path, self)
@@ -116,6 +159,9 @@ class MainWindow(QWidget):
                 self.sensorList[i].setText('%.1f °C' % self.value[i])
             else:
                 self.sensorList[i].setText('%.1f Bar' % self.value[i])
+        position = self.distance()
+        self.sliderPosition.setValue(int(position)*10)
+        self.valuePosition.setText("%.1f cm" % position)
         # self.sensorList[self.step].setText('%.1f °C' % self.value[self.step])
         if self.saving is True:
             _now = time.time()
@@ -133,6 +179,7 @@ class MainWindow(QWidget):
                 self.d['P1/[Bar]'].append(self.valueP1.text().split(' ')[0])
             if self.checkSaveP2.isChecked() is True:
                 self.d['P2/[Bar]'].append(self.valueP2.text().split(' ')[0])
+            self.d['Pos/[cm]'].append(self.valuePosition.text().split(' ')[0])
 
 
         #self.step += 1
@@ -152,6 +199,7 @@ class MainWindow(QWidget):
         if self.saving is False or self.saving is None:
             self.saving = True
             self.d['Time'] = []
+            self.d['Pos/[cm]'] = []
             if self.checkSaveT1.isChecked() is True:
                 self.d['T1/[°C]'] = []
                 self.writeT1.setVisible(True)
@@ -206,6 +254,7 @@ class MainWindow(QWidget):
 
     def stopExit(self):
         self.temp1.close()
+        GPIO.cleanup()
         sys.exit(0)
 
 
