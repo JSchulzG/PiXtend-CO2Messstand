@@ -5,9 +5,10 @@ from pathlib import Path
 import pandas as pd
 import sys
 
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import readTempData
 import dummi_readSensorData as rSD
+import serial
 
 #import matplotlib
 #matplotlib.use('Qt5Agg')
