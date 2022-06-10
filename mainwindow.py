@@ -43,15 +43,7 @@ class MainWindow(QWidget):
             i.setVisible(False)
         self.checkSaveList = [self.checkSaveT1, self.checkSaveT2, self.checkSaveT3, self.checkSaveT4, self.checkSaveP1, self.checkSaveP2]
 
-        #GPIO Mode (BOARD / BCM)
-        GPIO.setmode(GPIO.BCM)
-        #set GPIO Pins
-        self.GPIO_TRIGGER = 21
-        self.GPIO_ECHO = 19
-        #GPIO.setwarnings(False)
-        #set GPIO direction (IN / OUT)
-        GPIO.setup(self.GPIO_TRIGGER, GPIO.OUT)
-        GPIO.setup(self.GPIO_ECHO, GPIO.IN)
+
         self.sliderPosition.setMinimum(80)
         self.sliderPosition.setMaximum(280)
 
@@ -64,7 +56,7 @@ class MainWindow(QWidget):
         #self.step_plot = 0
         self.value = 0.0
         self.saving = None
-        self.d = {}
+        self.data = {}
         self.qTimer = QTimer()
         self.qTimer.setInterval(50)  # 50ms max PiXtend is not as fast :(
         self.qTimer.timeout.connect(self.getSensorData)
@@ -113,35 +105,6 @@ class MainWindow(QWidget):
         self.canvas.flush_events()
         """
 
-    def distance(self):
-            # set Trigger to HIGH
-            #print('start')
-        GPIO.output(self.GPIO_TRIGGER, True)
-
-            # set Trigger after 0.01ms to LOW
-        time.sleep(0.00001)
-        GPIO.output(self.GPIO_TRIGGER, False)
-        StartTime = time.time()
-        StopTime = time.time()
-
-            # save StartTime
-        while GPIO.input(self.GPIO_ECHO) == 0:
-            StartTime = time.time()
-
-            # save time of arrival
-        while GPIO.input(self.GPIO_ECHO) == 1:
-            StopTime = time.time()
-
-            # time difference between start and arrival
-        TimeElapsed = StopTime - StartTime
-            # multiply with the sonic speed (34300 cm/s)
-            # and divide by 2, because there and back
-        distance = (TimeElapsed * 34300) / 2
-
-        return distance
-
-
-
     def load_ui(self):
         path = os.fspath(Path(__file__).resolve().parent / "form.ui")
         loadUi(path, self)
@@ -159,27 +122,25 @@ class MainWindow(QWidget):
                 self.sensorList[i].setText('%.1f °C' % self.value[i])
             else:
                 self.sensorList[i].setText('%.1f Bar' % self.value[i])
-        position = self.distance()
-        self.sliderPosition.setValue(int(position)*10)
-        self.valuePosition.setText("%.1f cm" % position)
+                
         # self.sensorList[self.step].setText('%.1f °C' % self.value[self.step])
         if self.saving is True:
             _now = time.time()
             t = time.strftime('%X', time.localtime(_now)) + '.' + str('%.3f' % _now).split('.')[1]
-            self.d['Time'].append(t)
+            self.data['Time'].append(t)
             if self.checkSaveT1.isChecked() is True:
-                self.d['T1/[°C]'].append(self.valueT1.text().split(' ')[0])
+                self.data['T1/[°C]'].append(self.valueT1.text().split(' ')[0])
             if self.checkSaveT2.isChecked() is True:
-                self.d['T2/[°C]'].append(self.valueT2.text().split(' ')[0])
+                self.data['T2/[°C]'].append(self.valueT2.text().split(' ')[0])
             if self.checkSaveT3.isChecked() is True:
-                self.d['T3/[°C]'].append(self.valueT3.text().split(' ')[0])
+                self.data['T3/[°C]'].append(self.valueT3.text().split(' ')[0])
             if self.checkSaveT4.isChecked() is True:
-                self.d['T4/[°C]'].append(self.valueT4.text().split(' ')[0])
+                self.data['T4/[°C]'].append(self.valueT4.text().split(' ')[0])
             if self.checkSaveP1.isChecked() is True:
-                self.d['P1/[Bar]'].append(self.valueP1.text().split(' ')[0])
+                self.data['P1/[Bar]'].append(self.valueP1.text().split(' ')[0])
             if self.checkSaveP2.isChecked() is True:
-                self.d['P2/[Bar]'].append(self.valueP2.text().split(' ')[0])
-            self.d['Pos/[cm]'].append(self.valuePosition.text().split(' ')[0])
+                self.data['P2/[Bar]'].append(self.valueP2.text().split(' ')[0])
+            #self.data['Pos/[cm]'].append(self.valuePosition.text().split(' ')[0])
 
 
         #self.step += 1
@@ -198,25 +159,25 @@ class MainWindow(QWidget):
     def writeData(self):
         if self.saving is False or self.saving is None:
             self.saving = True
-            self.d['Time'] = []
-            self.d['Pos/[cm]'] = []
+            self.data['Time'] = []
+            self.data['Pos/[cm]'] = []
             if self.checkSaveT1.isChecked() is True:
-                self.d['T1/[°C]'] = []
+                self.data['T1/[°C]'] = []
                 self.writeT1.setVisible(True)
             if self.checkSaveT2.isChecked() is True:
-                self.d['T2/[°C]'] = []
+                self.data['T2/[°C]'] = []
                 self.writeT2.setVisible(True)
             if self.checkSaveT3.isChecked() is True:
-                self.d['T3/[°C]'] = []
+                self.data['T3/[°C]'] = []
                 self.writeT3.setVisible(True)
             if self.checkSaveT4.isChecked() is True:
-                self.d['T4/[°C]'] = []
+                self.data['T4/[°C]'] = []
                 self.writeT4.setVisible(True)
             if self.checkSaveP1.isChecked() is True:
-                self.d['P1/[Bar]'] = []
+                self.data['P1/[Bar]'] = []
                 self.writeP1.setVisible(True)
             if self.checkSaveP2.isChecked() is True:
-                self.d['P2/[Bar]'] = []
+                self.data['P2/[Bar]'] = []
                 self.writeP2.setVisible(True)
             for box in self.checkSaveList:
                 box.setVisible(False)
@@ -225,8 +186,8 @@ class MainWindow(QWidget):
             self.saveBtn.setStyleSheet("""background-color:red;
                 border-radius:10px; font: 12pt "Ubuntu";""")
         else:
-            df = pd.DataFrame(data=self.d)
-            self.d = {}
+            df = pd.DataFrame(data=self.data)
+            self.data = {}
             print(df)
             _now = time.time()
             fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now))+ '_data.csv'
@@ -254,7 +215,6 @@ class MainWindow(QWidget):
 
     def stopExit(self):
         self.temp1.close()
-        GPIO.cleanup()
         sys.exit(0)
 
 
