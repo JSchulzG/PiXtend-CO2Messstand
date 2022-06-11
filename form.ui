@@ -393,6 +393,7 @@ border: 2px solid;</string>
        </widget>
       </item>
      </layout>
+     <zorder>plot2Widget</zorder>
      <zorder>plotWidget</zorder>
      <zorder>windowTitel</zorder>
      <zorder>labelT1</zorder>
@@ -420,7 +421,6 @@ border: 2px solid;</string>
      <zorder>label_P1</zorder>
      <zorder>label_P2</zorder>
      <zorder>valuePosition</zorder>
-     <zorder>plot2Widget</zorder>
      <zorder>label</zorder>
      <zorder>sliderPosition</zorder>
      <zorder>valueTOut</zorder>
