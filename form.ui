@@ -23,6 +23,16 @@ border-color: rgb(85, 87, 83);
 border: 2px solid;}</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="7" column="6">
+       <widget class="QLabel" name="label">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Position:</string>
+        </property>
+       </widget>
+      </item>
       <item row="6" column="5">
        <widget class="QCheckBox" name="checkSaveP2">
         <property name="text">
@@ -40,6 +50,20 @@ border: 2px solid;}</string>
         </property>
         <property name="text">
          <string>Temp 1:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="4">
+       <widget class="QLabel" name="writeT3">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;
+color: rgb(204, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string>write</string>
         </property>
        </widget>
       </item>
@@ -151,20 +175,6 @@ border: 2px solid;</string>
          <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
 border-color: rgb(0, 0, 0);
 border: 2px solid;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="4">
-       <widget class="QLabel" name="writeT3">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;
-color: rgb(204, 0, 0);</string>
-        </property>
-        <property name="text">
-         <string>write</string>
         </property>
        </widget>
       </item>
@@ -303,13 +313,6 @@ border: 2px solid;</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="3">
-       <widget class="QSlider" name="sliderPosition">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
       <item row="7" column="7">
        <widget class="QLineEdit" name="valuePosition">
         <property name="styleSheet">
@@ -319,10 +322,10 @@ border: 2px solid;</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="4" colspan="4">
+      <item row="9" column="4" colspan="4">
        <widget class="QWidget" name="plot2Widget" native="true"/>
       </item>
-      <item row="8" column="0" colspan="4">
+      <item row="9" column="0" colspan="4">
        <widget class="QWidget" name="plotWidget" native="true">
         <property name="styleSheet">
          <string notr="true"/>
@@ -363,6 +366,32 @@ font: 12pt &quot;Ubuntu&quot;;</string>
         </layout>
        </widget>
       </item>
+      <item row="8" column="7">
+       <widget class="QSlider" name="sliderPosition">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="3">
+       <widget class="QLineEdit" name="valueTOut">
+        <property name="styleSheet">
+         <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
+border-color: rgb(0, 0, 0);
+border: 2px solid;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2">
+       <widget class="QLabel" name="labelTOUT">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
+        </property>
+        <property name="text">
+         <string>T Raum:</string>
+        </property>
+       </widget>
+      </item>
      </layout>
      <zorder>plotWidget</zorder>
      <zorder>windowTitel</zorder>
@@ -390,9 +419,12 @@ font: 12pt &quot;Ubuntu&quot;;</string>
      <zorder>checkSaveP2</zorder>
      <zorder>label_P1</zorder>
      <zorder>label_P2</zorder>
-     <zorder>sliderPosition</zorder>
      <zorder>valuePosition</zorder>
      <zorder>plot2Widget</zorder>
+     <zorder>label</zorder>
+     <zorder>sliderPosition</zorder>
+     <zorder>valueTOut</zorder>
+     <zorder>labelTOUT</zorder>
     </widget>
    </item>
   </layout>
