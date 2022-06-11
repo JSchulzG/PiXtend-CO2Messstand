@@ -2,6 +2,7 @@
 Mit einem PiXtendV2L werden 4 Temperaturen, 2 Drücke und eine Position ausgelesen.
 Die Temperaturen werden mit PT100 und Messverstärkern aufgenommen. Die Drücke mit zwei PN3571.
 Die Position wird mit einem TFMini-S Lidar und einer USB-TTL Schnittstelle bestimmt.
+Die graphische Oberfläche wurde mit PyQt5 geschrieben und mit dem Python-Modul pixtendv2l werden die Daten vom PiXtend geholt.
 Der Messintervall beträgt 50ms.
 
 ![coMessstand](https://user-images.githubusercontent.com/76759916/173206324-08c9684a-6e17-4d6a-8969-e8e1965ae27e.png)
