@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import sys
 
-import readTempData
+import readSensorData
 import dummi_readSensorData as rSD
 
 #import matplotlib
@@ -64,7 +64,7 @@ class MainWindow(QWidget):
         #self.canvas = MplCanvas(self)
         #l = QVBoxLayout(self.plot2Widget)
         #l.addWidget(self.canvas)
-        self.sensors = readTempData.ReadTempData()
+        self.sensors = readSensorData.ReadSensorData()
         #self.dummiSensor = rSD.ReadTemperature()
     """
     def plotUpdate(self):

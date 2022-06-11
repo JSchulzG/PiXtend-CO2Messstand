@@ -3,7 +3,7 @@ import serial
 import time
 
 
-class ReadTempData():
+class ReadSensorData():
     def __init__(self):
         self.p = PiXtendV2L()
         self.ser = serial.Serial("/dev/ttyUSB0", 115200)
