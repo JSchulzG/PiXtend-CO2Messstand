@@ -177,7 +177,7 @@ class MainWindow(QWidget):
                 self.writeP2.setVisible(True)
             for box in self.checkSaveList:
                 box.setVisible(False)
-
+            self.stopBtn.setVisible(False)
             self.saveBtn.setText("Stop saving Data")
             self.saveBtn.setStyleSheet("""background-color:red;
                 border-radius:10px; font: 12pt "Ubuntu";""")
@@ -202,6 +202,7 @@ class MainWindow(QWidget):
                 box.setVisible(True)
 
             self.saving = False
+            self.stopBtn.setVisible(True)
             self.saveBtn.setText("Start saving Data")
             self.saveBtn.setStyleSheet("""background-color:white;
                 border-radius:10px; font: 12pt "Ubuntu";""")
