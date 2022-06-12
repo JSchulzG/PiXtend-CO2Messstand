@@ -42,8 +42,8 @@ class MainWindow(QWidget):
             i.setVisible(False)
         self.checkSaveList = [self.checkSaveT1, self.checkSaveT2, self.checkSaveT3, self.checkSaveT4, self.checkSaveP1, self.checkSaveP2]
 
-        self.sliderPosition.setMinimum(8)
-        self.sliderPosition.setMaximum(28)
+        self.sliderPosition.setMinimum(1)
+        self.sliderPosition.setMaximum(17)
 
         self.valueT1.setText('%.1f °C' % 0)
         self.valueT2.setText('%.1f °C' % 0)
@@ -69,13 +69,13 @@ class MainWindow(QWidget):
 
     def plotUpdate(self):
         try:
-            self.plotdataT1 = np.vstack((self.plotdataT1, float(self.valueT1.text().split(' ')[0])))[-2000:]
-            self.plotdataT2 = np.vstack((self.plotdataT2, float(self.valueT2.text().split(' ')[0])))[-2000:]
-            self.plotdataT3 = np.vstack((self.plotdataT3, float(self.valueT3.text().split(' ')[0])))[-2000:]
-            self.plotdataT4 = np.vstack((self.plotdataT4, float(self.valueT4.text().split(' ')[0])))[-2000:]
-            self.plotdataP1 = np.vstack((self.plotdataP1, float(self.valueP1.text().split(' ')[0])))[-2000:]
-            self.plotdataP2 = np.vstack((self.plotdataP2, float(self.valueP2.text().split(' ')[0])))[-2000:]
-            self.plotdataPosition = np.vstack((self.plotdataPosition, float(self.valuePosition.text().split(' ')[0])))[-2000:]
+            self.plotdataT1 = np.vstack((self.plotdataT1, float(self.valueT1.text().split(' ')[0])))[-300:]
+            self.plotdataT2 = np.vstack((self.plotdataT2, float(self.valueT2.text().split(' ')[0])))[-300:]
+            self.plotdataT3 = np.vstack((self.plotdataT3, float(self.valueT3.text().split(' ')[0])))[-300:]
+            self.plotdataT4 = np.vstack((self.plotdataT4, float(self.valueT4.text().split(' ')[0])))[-300:]
+            self.plotdataP1 = np.vstack((self.plotdataP1, float(self.valueP1.text().split(' ')[0])))[-300:]
+            self.plotdataP2 = np.vstack((self.plotdataP2, float(self.valueP2.text().split(' ')[0])))[-300:]
+            self.plotdataPosition = np.vstack((self.plotdataPosition, float(self.valuePosition.text().split(' ')[0])))[-300:]
 
         except:
             # first data point
@@ -118,7 +118,7 @@ class MainWindow(QWidget):
                 self.sensorList[i].setText('%.1f °C' % self.value[i])
             else:
                 self.sensorList[i].setText('%.1f Bar' % self.value[i])
-        position = self.value[6]
+        position = 42 - self.value[6]
         self.sliderPosition.setValue(position)
         self.valuePosition.setText("%i cm" % position)
         self.valueTOut.setText("%.1f °C" % (self.value[7]/100))

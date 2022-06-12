@@ -42,8 +42,8 @@ class MainWindow(QWidget):
             i.setVisible(False)
         self.checkSaveList = [self.checkSaveT1, self.checkSaveT2, self.checkSaveT3, self.checkSaveT4, self.checkSaveP1, self.checkSaveP2]
 
-        self.sliderPosition.setMinimum(8)
-        self.sliderPosition.setMaximum(28)
+        self.sliderPosition.setMinimum(1)
+        self.sliderPosition.setMaximum(17)
 
         self.valueT1.setText('%.1f °C' % 0)
         self.valueT2.setText('%.1f °C' % 0)
@@ -115,7 +115,7 @@ class MainWindow(QWidget):
                 self.sensorList[i].setText('%.1f °C' % self.value[i])
             else:
                 self.sensorList[i].setText('%.1f Bar' % self.value[i])
-        position = self.value[6]
+        position = 42 - self.value[6]
         self.sliderPosition.setValue(position)
         self.valuePosition.setText("%i cm" % position)
         self.valueTOut.setText("%.1f °C" % (self.value[7]/100))
