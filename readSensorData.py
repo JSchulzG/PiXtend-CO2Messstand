@@ -34,8 +34,8 @@ class ReadSensorData():
         """
         Wenn der Drucksensor auf einen Bereich von 1bar = 4mA und 100bar = 20mA eingestellt ist.
         """
-        scalling_P = 6.1875
-        offset_P = -23.75
+        scalling_P = 15.625
+        offset_P = -62.5
         raw_Data = self.p.analog_in0
         data.append(raw_Data*scalling_T)
         raw_Data = self.p.analog_in1
