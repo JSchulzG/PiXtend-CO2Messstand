@@ -7,12 +7,8 @@ import datetime
 
 from pyparsing import empty
 
-#path = '/home/jan/Dokumente/20220612_daten/20220612145925_data.csv'
 
-
-
-if __name__ == '__main__':
-    path = sys.argv[1]
+def plot(path, show=False, save=True):
     print(path)
     file = open(path)
     startData = 0
@@ -33,6 +29,12 @@ if __name__ == '__main__':
             ax.plot(timeLine, dataFrame[key].values, linewidth=1.5, label=key)
     ax.legend()
     plt.title(title)
-    #plt.show()
-    pathImg = path.split('.')[0]+'.png'
-    plt.savefig(pathImg)
+    if show == True:
+        plt.show()
+    if save == True:
+        pathImg = path.split('.')[0]+'.png'
+        plt.savefig(pathImg)
+
+if __name__ == '__main__':
+    path = sys.argv[1]
+    plot(path, show=True)
