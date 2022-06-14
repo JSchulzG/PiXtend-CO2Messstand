@@ -8,7 +8,7 @@ import numpy as np
 from pyparsing import empty
 
 
-def plot(path, show=False, save=True):
+def plot(path, show=False, save=True, cycle=False):
     print(path)
     if '.csv' != path[-4:]:
         print('bitte eine csv Datei übergeben!')
@@ -43,37 +43,37 @@ def plot(path, show=False, save=True):
             if 'cm' in key:
                 axS.plot(dataFrame[key], linewidth=1.5, label=key)
                 axS.set(ylabel='cm')
-
-    # Bestimmung der lokalen Minima 
-    dataFrame['min'] = dataFrame.iloc[argrelextrema(dataFrame['Pos/[cm]'].values, np.less_equal,
-                    order=2000)[0]]['Pos/[cm]']
-    #axS.scatter(dataFrame.index, dataFrame['min'], c='r')
-    dataFrame['max'] = dataFrame.iloc[argrelextrema(dataFrame['Pos/[cm]'].values, np.greater_equal,
-                    order=2000)[0]]['Pos/[cm]']
-    #axS.scatter(dataFrame.index, dataFrame['max'], c='g')
-    # Bestimmung der Zykluszeit von erstem lokalen Min zu dem nächsten.
-    # D.h. Zeit die der Kolben braucht um von links nach rechts und zurück zu fahren.
-    # Daraus liesse sich die Leistung berechnen.
-    deltaTime = 0.0
-    startTime = 0.0
-    dataFrame['startZyklus'] = np.nan
-    for time in dataFrame.index:
-        if dataFrame['min'][time] >= 0 and startTime == 0.0:
-            #print(time)
-            startTime = time
-            dataFrame.at[time, 'startZyklus'] = dataFrame['min'][time]
-        elif dataFrame['min'][time] >= 0 and deltaTime < 40.0:
-            deltaTime = time - startTime
-        elif dataFrame['min'][time] >= 0 and deltaTime >40.0:
-            deltaTime = time - startTime
-            print('Zyklus Zeit: %.3f' %deltaTime)
-            dataFrame.at[time, 'startZyklus'] = dataFrame['min'][time]
-            startTime = time
-            deltaTime = 0.0
-    axS.scatter(dataFrame.index, dataFrame['startZyklus'], c='r')
-    for time in dataFrame.index:
-        if dataFrame['startZyklus'][time] != np.nan:
-            axS.annotate('%.1f'%time, (time-40, dataFrame['startZyklus'][time]))
+    if cycle == True:
+        # Bestimmung der lokalen Minima 
+        dataFrame['min'] = dataFrame.iloc[argrelextrema(dataFrame['Pos/[cm]'].values, np.less_equal,
+                        order=2000)[0]]['Pos/[cm]']
+        #axS.scatter(dataFrame.index, dataFrame['min'], c='r')
+        dataFrame['max'] = dataFrame.iloc[argrelextrema(dataFrame['Pos/[cm]'].values, np.greater_equal,
+                        order=2000)[0]]['Pos/[cm]']
+        #axS.scatter(dataFrame.index, dataFrame['max'], c='g')
+        # Bestimmung der Zykluszeit von erstem lokalen Min zu dem nächsten.
+        # D.h. Zeit die der Kolben braucht um von links nach rechts und zurück zu fahren.
+        # Daraus liesse sich die Leistung berechnen.
+        deltaTime = 0.0
+        startTime = 0.0
+        dataFrame['startZyklus'] = np.nan
+        for time in dataFrame.index:
+            if dataFrame['min'][time] >= 0 and startTime == 0.0:
+                #print(time)
+                startTime = time
+                dataFrame.at[time, 'startZyklus'] = dataFrame['min'][time]
+            elif dataFrame['min'][time] >= 0 and deltaTime < 40.0:
+                deltaTime = time - startTime
+            elif dataFrame['min'][time] >= 0 and deltaTime >40.0:
+                deltaTime = time - startTime
+                print('Zyklus Zeit: %.3f' %deltaTime)
+                dataFrame.at[time, 'startZyklus'] = dataFrame['min'][time]
+                startTime = time
+                deltaTime = 0.0
+        axS.scatter(dataFrame.index, dataFrame['startZyklus'], c='r')
+        for time in dataFrame.index:
+            if dataFrame['startZyklus'][time] != np.nan:
+                axS.annotate('%.1f'%time, (time-40, dataFrame['startZyklus'][time]))
         
     axT.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     axP.legend(loc='center left', bbox_to_anchor=(1, 0.5))
@@ -91,4 +91,4 @@ def plot(path, show=False, save=True):
 if __name__ == '__main__':
     path = sys.argv[1]
     
-    plot(path, show=True, save=False)
+    plot(path, show=True, save=False, cycle=True)
