@@ -62,19 +62,18 @@ def plot(path, show=False, save=True, cycle=False):
                 #print(time)
                 startTime = time
                 dataFrame.at[time, 'startZyklus'] = dataFrame['min'][time]
+                axS.annotate('%.1f'%time, (time-40, dataFrame['startZyklus'][time]))
             elif dataFrame['min'][time] >= 0 and deltaTime < 40.0:
                 deltaTime = time - startTime
             elif dataFrame['min'][time] >= 0 and deltaTime >40.0:
                 deltaTime = time - startTime
                 print('Zyklus Zeit: %.3f' %deltaTime)
                 dataFrame.at[time, 'startZyklus'] = dataFrame['min'][time]
+                axS.annotate('%.1f'%time, (time-40, dataFrame['startZyklus'][time]))
                 startTime = time
                 deltaTime = 0.0
         axS.scatter(dataFrame.index, dataFrame['startZyklus'], c='r')
-        for time in dataFrame.index:
-            if dataFrame['startZyklus'][time] != np.nan:
-                axS.annotate('%.1f'%time, (time-40, dataFrame['startZyklus'][time]))
-        
+
     axT.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     axP.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     axS.legend(loc='center left', bbox_to_anchor=(1, 0.5))
