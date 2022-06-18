@@ -50,7 +50,7 @@ class MainWindow(QWidget):
         self.valueT3.setText('%.1f °C' % 0)
         self.valueT4.setText('%.1f °C' % 0)
         self.sensorList = [self.valueT1, self.valueT2, self.valueT3, self.valueT4, self.valueP1, self.valueP2]
-        #self.step = 0
+        self.step = 0
         self.step_plot = 0
         self.value = 0.0
         self.saving = None
@@ -66,7 +66,7 @@ class MainWindow(QWidget):
         self.startPlotTime = time.time()
         self.data = {}
         self.qTimer = QTimer()
-        self.qTimer.setInterval(50)  # 50ms max PiXtend is not as fast :(
+        self.qTimer.setInterval(100)  # 50ms max PiXtend is not as fast :(
         self.qTimer.timeout.connect(self.getSensorData)
         self.qTimer.start()
         self.saveBtn.clicked.connect(self.writeData)
@@ -109,25 +109,35 @@ class MainWindow(QWidget):
             plotPos_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataPos, color=(1,1,1))
             self._plot_ref['Pos'] = plotPos_refs[0]
         else:
-            if len(self.plotDataTime) < 500:
+            if len(self.plotDataTime) < 5000:
                 self.canvas.axes.set_xlim(0, self.plotDataTime[-1])
             else:
-                self.canvas.axes.set_xlim(self.plotDataTime[-500], self.plotDataTime[-1])
+                self.canvas.axes.set_xlim(self.plotDataTime[-5000], self.plotDataTime[-1])
             if self.checkSaveT1.isChecked() is True:
-                self._plot_ref['T1'].set_data(self.plotDataTime[-500:], self.plotDataT1[-500:])
+            #if self.step_plot == 0 and self.checkSaveT1.isChecked() is True:
+                self._plot_ref['T1'].set_data(self.plotDataTime[-5000:], self.plotDataT1[-5000:])
             if self.checkSaveT2.isChecked() is True:
-                self._plot_ref['T2'].set_data(self.plotDataTime[-500:], self.plotDataT2[-500:])
+            #if self.step_plot == 1 and self.checkSaveT2.isChecked() is True:
+                self._plot_ref['T2'].set_data(self.plotDataTime[-5000:], self.plotDataT2[-5000:])
             if self.checkSaveT3.isChecked() is True:
-                self._plot_ref['T3'].set_data(self.plotDataTime[-500:], self.plotDataT3[-500:])
+            #if self.step_plot == 2 and self.checkSaveT3.isChecked() is True:
+                self._plot_ref['T3'].set_data(self.plotDataTime[-5000:], self.plotDataT3[-5000:])
             if self.checkSaveT4.isChecked() is True:
-                self._plot_ref['T4'].set_data(self.plotDataTime[-500:], self.plotDataT4[-500:])
+            #if self.step_plot == 3 and self.checkSaveT4.isChecked() is True:
+                self._plot_ref['T4'].set_data(self.plotDataTime[-5000:], self.plotDataT4[-5000:])
             if self.checkSaveP1.isChecked() is True:
-                self._plot_ref['P1'].set_data(self.plotDataTime[-500:], self.plotDataP1[-500:])
+            #if self.step_plot == 4 and self.checkSaveP1.isChecked() is True:
+                self._plot_ref['P1'].set_data(self.plotDataTime[-5000:], self.plotDataP1[-5000:])
             if self.checkSaveP2.isChecked() is True:
-                self._plot_ref['P2'].set_data(self.plotDataTime[-500:], self.plotDataP2[-500:])
-            self._plot_ref['Pos'].set_data(self.plotDataTime[-500:], self.plotDataPos[-500:])
-        self.step_plot = 0
-        self.canvas.draw()
+            #if self.step_plot == 5 and self.checkSaveP2.isChecked() is True:
+                self._plot_ref['P2'].set_data(self.plotDataTime[-5000:], self.plotDataP2[-5000:])
+            #if self.step_plot == 6:
+            self._plot_ref['Pos'].set_data(self.plotDataTime[-5000:], self.plotDataPos[-5000:])
+            self.step_plot = 0
+            #else:
+            #   self.step_plot += 1
+        self.step = 0
+        self.canvas.draw() 
         #self.canvas.flush_events()
 
 
@@ -166,10 +176,10 @@ class MainWindow(QWidget):
             self.data['Pos/[cm]'].append(self.valuePosition.text().split(' ')[0])
             self.data['TOut/[°C]'].append(self.valueTOut.text().split(' ')[0])
         
-        if self.step_plot > 4:
-            self.plotUpdate()
+        #if self.step > 4:
+        self.plotUpdate()
         #self.step += 1
-        self.step_plot += 1
+        #self.step_plot += 1
         """            if self.checkSaveP1.isChecked() is True:
             self.data['P1 / [Bar]'] = []
             self.writeP1.setVisible(True)
