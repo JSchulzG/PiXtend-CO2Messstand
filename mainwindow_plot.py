@@ -5,8 +5,8 @@ from pathlib import Path
 import pandas as pd
 import sys
 
-import readSensorData
-import dummi_readSensorData as rSD
+#import readSensorData
+import readDummySensors as rSD
 
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -54,6 +54,16 @@ class MainWindow(QWidget):
         self.step_plot = 0
         self.value = 0.0
         self.saving = None
+        self._plot_ref = {}
+        self.plotDataTime = []
+        self.plotDataT1 = []
+        self.plotDataT2 = []
+        self.plotDataT3 = []
+        self.plotDataT4 = []
+        self.plotDataP1 = []
+        self.plotDataP2 = []
+        self.plotDataPos = []
+        self.startPlotTime = time.time()
         self.data = {}
         self.qTimer = QTimer()
         self.qTimer.setInterval(50)  # 50ms max PiXtend is not as fast :(
@@ -64,10 +74,11 @@ class MainWindow(QWidget):
         self.canvas = MplCanvas(self)
         l = QVBoxLayout(self.plot2Widget)
         l.addWidget(self.canvas)
-        self.sensors = readSensorData.ReadSensorData()
-        #self.dummiSensor = rSD.ReadTemperature()
+        #self.sensors = readSensorData.ReadSensorData()
+        self.sensors = rSD.ReadSensorData()
 
     def plotUpdate(self):
+        """
         try:
             self.plotdataT1 = np.vstack((self.plotdataT1, float(self.valueT1.text().split(' ')[0])))[-300:]
             self.plotdataT2 = np.vstack((self.plotdataT2, float(self.valueT2.text().split(' ')[0])))[-300:]
@@ -88,22 +99,63 @@ class MainWindow(QWidget):
             self.plotdataP2 = np.array([[(float(self.valueP2.text().split(' ')[0]))]])
             self.plotdataPosition = np.array([[(float(self.valuePosition.text().split(' ')[0]))]])
         #self.ydata = self.plotdata
+        """
+        _time = time.time()-self.startPlotTime
+        self.plotDataTime.append(_time)
+        self.plotDataT1.append(float(self.valueT1.text().split(' ')[0]))
+        self.plotDataT2.append(float(self.valueT2.text().split(' ')[0]))
+        self.plotDataT3.append(float(self.valueT3.text().split(' ')[0]))
+        self.plotDataT4.append(float(self.valueT4.text().split(' ')[0]))
+        self.plotDataP1.append(float(self.valueP1.text().split(' ')[0]))
+        self.plotDataP2.append(float(self.valueP2.text().split(' ')[0]))
+        self.plotDataPos.append(float(self.valuePosition.text().split(' ')[0]))
 
-        self.canvas.axes.clear()
-        self.canvas.axes.set_facecolor((0, 0, 0))
-        self.canvas.axes.yaxis.grid(True, linestyle='--')
-        start, end = self.canvas.axes.get_ylim()
-        self.canvas.axes.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
-        self.canvas.axes.set_autoscale_on(True)  #set_ylim( ymin=0, ymax=100)
-        self.canvas.axes.plot(self.plotdataT1, color=(0,1,0.29))
-        self.canvas.axes.plot(self.plotdataT2, color=(0,1,0))
-        self.canvas.axes.plot(self.plotdataT3, color=(1,0,0.29))
-        self.canvas.axes.plot(self.plotdataT4, color=(1,0,0))
-        self.canvas.axes.plot(self.plotdataP1, color=(0,1,1))
-        self.canvas.axes.plot(self.plotdataP2, color=(0,1,1))
-        self.canvas.axes.plot(self.plotdataPosition, color=(1,1,1))
+        # self.plotData.at[_time, 'T1'] = float(self.valueT1.text().split(' ')[0])
+        # self.plotData.at[_time, 'T2'] = float(self.valueT2.text().split(' ')[0])
+        # self.plotData.at[_time, 'T3'] = float(self.valueT3.text().split(' ')[0])
+        # self.plotData.at[_time, 'T4'] = float(self.valueT4.text().split(' ')[0])
+        # self.plotData.at[_time, 'P1'] = float(self.valueP1.text().split(' ')[0])
+        # self.plotData.at[_time, 'P2'] = float(self.valueP2.text().split(' ')[0])
+        # self.plotData.at[_time,'Pos'] = float(self.valuePosition.text().split(' ')[0])
+        if len(self._plot_ref) == 0:
+            #print(self.plotData)
+            self.canvas.axes.set_facecolor((0, 0, 0))
+            self.canvas.axes.yaxis.grid(True, linestyle='--')
+            #start, end = self.canvas.axes.get_ylim()
+            #self.canvas.axes.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
+            #self.canvas.axes.autoscale()
+            self.canvas.axes.set_xlim(0, 10)
+            self.canvas.axes.set_ylim(0, 100)
+            plotT1_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataT1, color=(0,1,0.29))
+            print(plotT1_refs[0])
+            self._plot_ref['T1'] = plotT1_refs[0]
+            plotT2_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataT2, color=(0,1,0))
+            self._plot_ref['T2'] = plotT2_refs[0]
+            plotT3_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataT3, color=(1,0,0.29))
+            self._plot_ref['T3'] = plotT3_refs[0]
+            plotT4_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataT4, color=(1,0,0))
+            self._plot_ref['T4'] = plotT4_refs[0]
+            plotP1_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataP1, color=(0,1,1))
+            self._plot_ref['P1'] = plotP1_refs[0]
+            plotP2_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataP2, color=(0,1,1))
+            self._plot_ref['P2'] = plotP2_refs[0]
+            plotPos_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataPos, color=(1,1,1))
+            self._plot_ref['Pos'] = plotPos_refs[0]
+        else:
+            if len(self.plotDataTime) < 500:
+                self.canvas.axes.set_xlim(0, self.plotDataTime[-1])
+            else:
+                self.canvas.axes.set_xlim(self.plotDataTime[-500], self.plotDataTime[-1])
+            self._plot_ref['T1'].set_data(self.plotDataTime[-500:], self.plotDataT1[-500:])
+            #self._plot_ref['T2'].set_data(self.plotDataTime[-500:], self.plotDataT2[-500:])
+            self._plot_ref['T3'].set_data(self.plotDataTime[-500:], self.plotDataT3[-500:])
+            #self._plot_ref['T4'].set_data(self.plotDataTime[-500:], self.plotDataT4[-500:])
+            self._plot_ref['P1'].set_data(self.plotDataTime[-500:], self.plotDataP1[-500:])
+            self._plot_ref['P2'].set_data(self.plotDataTime[-500:], self.plotDataP2[-500:])
+            self._plot_ref['Pos'].set_data(self.plotDataTime[-500:], self.plotDataPos[-500:])
+        self.step_plot = 0
         self.canvas.draw()
-        self.canvas.flush_events()
+        #self.canvas.flush_events()
 
 
     def load_ui(self):
@@ -140,9 +192,9 @@ class MainWindow(QWidget):
                 self.data['P2/[Bar]'].append(self.valueP2.text().split(' ')[0])
             self.data['Pos/[cm]'].append(self.valuePosition.text().split(' ')[0])
             self.data['TOut/[°C]'].append(self.valueTOut.text().split(' ')[0])
-        else:
-            if self.step_plot > 10:
-                self.plotUpdate()
+        
+        if self.step_plot > 4:
+            self.plotUpdate()
         #self.step += 1
         self.step_plot += 1
         """            if self.checkSaveP1.isChecked() is True:
@@ -192,7 +244,7 @@ class MainWindow(QWidget):
             print(df)
             _now = time.time()
             fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now))+ '_data.csv'
-            path = "/home/pi/Desktop/daten/" + fileName
+            path = "/home/jan/Schreibtisch/daten/" + fileName
             f = open(path, 'w')
 
             f.write(self.kommentar.toPlainText())
