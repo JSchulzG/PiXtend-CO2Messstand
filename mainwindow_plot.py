@@ -15,15 +15,13 @@ from matplotlib.figure import Figure
 import matplotlib.ticker as ticker
 import numpy as np
 
-
 from PyQt5 import QtWidgets
 from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QWidget, QVBoxLayout
 from PyQt5.QtCore import QTimer
 
-
-
-
+from multiprocessing import Process, Queue
+from pltData import GetData
 
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -63,10 +61,11 @@ class MainWindow(QWidget):
         self.plotDataP1 = []
         self.plotDataP2 = []
         self.plotDataPos = []
-        self.startPlotTime = time.time()
+        # self.plotLength = 500
+        
         self.data = {}
         self.qTimer = QTimer()
-        self.qTimer.setInterval(100)  # 50ms max PiXtend is not as fast :(
+        self.qTimer.setInterval(1000)  # 50ms max PiXtend is not as fast :(
         self.qTimer.timeout.connect(self.getSensorData)
         self.qTimer.start()
         self.saveBtn.clicked.connect(self.writeData)
@@ -76,7 +75,27 @@ class MainWindow(QWidget):
         l.addWidget(self.canvas)
         #self.sensors = readSensorData.ReadSensorData()
         self.sensors = rSD.ReadSensorData()
-
+        self.queueData = Queue()
+        """
+        start with multiprocessing see: 
+        https://stackoverflow.com/questions/43861164/passing-data-between-separately-running-python-scripts
+        
+        """
+        ploter = GetData()
+        pltData = Process(target=ploter.getData, args=[self.queueData])
+        pltData.deamon = True
+        pltData.start()
+        self.startPlotTime = time.time()
+    
+    def writeTempFile(self):
+        _time = time.time() - self.startPlotTime
+        dataLine = [float(_time)]
+        for sensor in self.sensorList:
+            dataLine.append(float(sensor.text().split(' ')[0]))
+        #print(dataLine)
+        self.queueData.put(dataLine)
+       
+    """
     def plotUpdate(self):
         _time = time.time()-self.startPlotTime
         self.plotDataTime.append(_time)
@@ -109,37 +128,37 @@ class MainWindow(QWidget):
             plotPos_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataPos, color=(1,1,1))
             self._plot_ref['Pos'] = plotPos_refs[0]
         else:
-            if len(self.plotDataTime) < 5000:
+            if len(self.plotDataTime) < self.plotLength.value():
                 self.canvas.axes.set_xlim(0, self.plotDataTime[-1])
             else:
-                self.canvas.axes.set_xlim(self.plotDataTime[-5000], self.plotDataTime[-1])
+                self.canvas.axes.set_xlim(self.plotDataTime[-self.plotLength.value()], self.plotDataTime[-1])
             if self.checkSaveT1.isChecked() is True:
             #if self.step_plot == 0 and self.checkSaveT1.isChecked() is True:
-                self._plot_ref['T1'].set_data(self.plotDataTime[-5000:], self.plotDataT1[-5000:])
+                self._plot_ref['T1'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataT1[-self.plotLength.value():])
             if self.checkSaveT2.isChecked() is True:
             #if self.step_plot == 1 and self.checkSaveT2.isChecked() is True:
-                self._plot_ref['T2'].set_data(self.plotDataTime[-5000:], self.plotDataT2[-5000:])
+                self._plot_ref['T2'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataT2[-self.plotLength.value():])
             if self.checkSaveT3.isChecked() is True:
             #if self.step_plot == 2 and self.checkSaveT3.isChecked() is True:
-                self._plot_ref['T3'].set_data(self.plotDataTime[-5000:], self.plotDataT3[-5000:])
+                self._plot_ref['T3'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataT3[-self.plotLength.value():])
             if self.checkSaveT4.isChecked() is True:
             #if self.step_plot == 3 and self.checkSaveT4.isChecked() is True:
-                self._plot_ref['T4'].set_data(self.plotDataTime[-5000:], self.plotDataT4[-5000:])
+                self._plot_ref['T4'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataT4[-self.plotLength.value():])
             if self.checkSaveP1.isChecked() is True:
             #if self.step_plot == 4 and self.checkSaveP1.isChecked() is True:
-                self._plot_ref['P1'].set_data(self.plotDataTime[-5000:], self.plotDataP1[-5000:])
+                self._plot_ref['P1'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataP1[-self.plotLength.value():])
             if self.checkSaveP2.isChecked() is True:
             #if self.step_plot == 5 and self.checkSaveP2.isChecked() is True:
-                self._plot_ref['P2'].set_data(self.plotDataTime[-5000:], self.plotDataP2[-5000:])
+                self._plot_ref['P2'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataP2[-self.plotLength.value():])
             #if self.step_plot == 6:
-            self._plot_ref['Pos'].set_data(self.plotDataTime[-5000:], self.plotDataPos[-5000:])
+            self._plot_ref['Pos'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataPos[-self.plotLength.value():])
             self.step_plot = 0
             #else:
             #   self.step_plot += 1
         self.step = 0
         self.canvas.draw() 
         #self.canvas.flush_events()
-
+    """
 
     def load_ui(self):
         path = os.fspath(Path(__file__).resolve().parent / "form.ui")
@@ -175,9 +194,10 @@ class MainWindow(QWidget):
                 self.data['P2/[Bar]'].append(self.valueP2.text().split(' ')[0])
             self.data['Pos/[cm]'].append(self.valuePosition.text().split(' ')[0])
             self.data['TOut/[°C]'].append(self.valueTOut.text().split(' ')[0])
-        
-        #if self.step > 4:
-        self.plotUpdate()
+
+        self.writeTempFile()
+        #if self.step > :
+        #self.plotUpdate()
         #self.step += 1
         #self.step_plot += 1
         """            if self.checkSaveP1.isChecked() is True:
@@ -227,7 +247,7 @@ class MainWindow(QWidget):
             print(df)
             _now = time.time()
             fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now))+ '_data.csv'
-            path = "/home/jan/Schreibtisch/daten/" + fileName
+            path = "/home/user/Documents/daten/" + fileName
             f = open(path, 'w')
 
             f.write(self.kommentar.toPlainText())
@@ -248,6 +268,7 @@ class MainWindow(QWidget):
 
 
     def stopExit(self):
+        self.queueData.put('done and exit')
         self.sensors.close()
         sys.exit(0)
 
