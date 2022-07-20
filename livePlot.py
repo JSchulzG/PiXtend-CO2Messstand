@@ -13,11 +13,10 @@ fig = plt.figure()
 gs = fig.add_gridspec(3, hspace=0)
 axT, axP, axPos = gs.subplots(sharex=True)
 fig.suptitle('Live Plot Daten')
-x_vals = []
-y_vals = []
-
+start = True
 index = count()
 fieldnames = ['time', 'T1', 'T2', 'T3', 'T4', 'P1', 'P2', 'Pos']
+lengthPlot = 20.0
 
 def animate(i):
     if Path('data.csv').is_file():
@@ -33,7 +32,11 @@ def animate(i):
             csv_writer.writeheader()
         os.remove('data2.csv')
 
-    time = data['time']
+    try:
+        time = data['time']
+    except:
+        print('data vault')
+        return
     t1 = data['T1']
     t2 = data['T2']
     t3 = data['T3']
@@ -43,6 +46,14 @@ def animate(i):
     pos = data['Pos']
     #print(time)
     #plt.cla()
+    #if start == True:
+    #    start_time = time[0]
+    #    stat = False
+    #    print(start_time)
+    if time[1] > lengthPlot:
+        axT.set_xlim(time[1]-lengthPlot, time[1])
+        axP.set_xlim(time[1]-lengthPlot, time[1])
+        axPos.set_xlim(time[1]-lengthPlot, time[1])
 
     axT.plot(time, t1, color='red', marker='.', label='T1')
     axT.plot(time, t2, color='red', marker='.')
@@ -57,7 +68,7 @@ def animate(i):
     plt.tight_layout()
 
 
-ani = FuncAnimation(plt.gcf(), animate, interval=200)
+ani = FuncAnimation(plt.gcf(), animate, interval=300)
 
 plt.tight_layout()
 plt.show()
