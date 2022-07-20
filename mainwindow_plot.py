@@ -8,6 +8,7 @@ import sys
 #import readSensorData
 import readDummySensors as rSD
 import csv
+from os.path import exists
 
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -99,7 +100,11 @@ class MainWindow(QWidget):
         self.startPlotTime = time.time()
 
     def writeTempFile(self):
-        with open('data.csv', 'a') as csv_file:
+        if Path('data.csv').is_file():
+            path = 'data.csv'
+        else:
+            path = 'data2.csv'
+        with open(path, 'a') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
 
             _time = time.time() - self.startPlotTime

@@ -1,4 +1,6 @@
-
+import csv
+import os
+from pathlib import Path
 import random
 from itertools import count
 import pandas as pd
@@ -15,10 +17,22 @@ x_vals = []
 y_vals = []
 
 index = count()
-
+fieldnames = ['time', 'T1', 'T2', 'T3', 'T4', 'P1', 'P2', 'Pos']
 
 def animate(i):
-    data = pd.read_csv('data.csv')
+    if Path('data.csv').is_file():
+        data = pd.read_csv('data.csv')
+        with open('data2.csv', 'w') as csv_file:
+            csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            csv_writer.writeheader()
+        os.remove('data.csv')
+    else:
+        data = pd.read_csv('data2.csv')
+        with open('data.csv', 'w') as csv_file:
+            csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            csv_writer.writeheader()
+        os.remove('data2.csv')
+
     time = data['time']
     t1 = data['T1']
     t2 = data['T2']
@@ -27,21 +41,23 @@ def animate(i):
     p1 = data['P1']
     p2 = data['P2']
     pos = data['Pos']
-    # print(time)
-    plt.cla()
+    #print(time)
+    #plt.cla()
 
-    #axT.plot(time, t1, color='red')
-    axT.plot(time, t2, color='red')
-    #axT.plot(time, t3, color='green')
-    axT.plot(time, t4, color='green')
-    axP.plot(time, p1, color='red')
+    axT.plot(time, t1, color='red', marker='.', label='T1')
+    axT.plot(time, t2, color='red', marker='.')
+    axT.plot(time, t3, color='green', marker='.')
+    axT.plot(time, t4, color='green', marker='.')
+    axP.plot(time, p1, color='red', marker='.')
+    axP.plot(time, p2, color='green', marker='.')
+    axPos.plot(time, pos, color='blue', marker='.', linestyle='None')
     axT.label_outer()
     axP.label_outer()
     axPos.label_outer()
     plt.tight_layout()
 
 
-ani = FuncAnimation(plt.gcf(), animate, interval=100)
+ani = FuncAnimation(plt.gcf(), animate, interval=200)
 
 plt.tight_layout()
 plt.show()
