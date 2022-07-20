@@ -7,6 +7,7 @@ import sys
 
 #import readSensorData
 import readDummySensors as rSD
+import csv
 
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -62,39 +63,52 @@ class MainWindow(QWidget):
         self.plotDataP2 = []
         self.plotDataPos = []
         # self.plotLength = 500
-        
+
         self.data = {}
         self.qTimer = QTimer()
-        self.qTimer.setInterval(1000)  # 50ms max PiXtend is not as fast :(
+        self.qTimer.setInterval(50)  # 50ms max PiXtend is not as fast :(
         self.qTimer.timeout.connect(self.getSensorData)
         self.qTimer.start()
         self.saveBtn.clicked.connect(self.writeData)
         self.stopBtn.clicked.connect(self.stopExit)
-        self.canvas = MplCanvas(self)
-        l = QVBoxLayout(self.plot2Widget)
-        l.addWidget(self.canvas)
+        #self.canvas = MplCanvas(self)
+        #l = QVBoxLayout(self.plot2Widget)
+        #l.addWidget(self.canvas)
         #self.sensors = readSensorData.ReadSensorData()
         self.sensors = rSD.ReadSensorData()
-        self.queueData = Queue()
+        #self.queueData = Queue()
         """
-        start with multiprocessing see: 
+        start with multiprocessing see:
         https://stackoverflow.com/questions/43861164/passing-data-between-separately-running-python-scripts
-        
+
         """
-        ploter = GetData()
-        pltData = Process(target=ploter.getData, args=[self.queueData])
-        pltData.deamon = True
-        pltData.start()
+        self.fieldnames = ['time', 'T1', 'T2']
+        with open('data.csv','w') as csv_file:
+            csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
+            csv_writer.writeheader()
+        #ploter = GetData()
+        #pltData = Process(target=ploter.getData, args=[self.queueData])
+        #pltData.deamon = True
+        #pltData.start()
         self.startPlotTime = time.time()
-    
+
     def writeTempFile(self):
-        _time = time.time() - self.startPlotTime
-        dataLine = [float(_time)]
-        for sensor in self.sensorList:
-            dataLine.append(float(sensor.text().split(' ')[0]))
+        with open('data.csv', 'a') as csv_file:
+            csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
+
+            _time = time.time() - self.startPlotTime
+            data = {
+                "time": _time,
+                "T1": self.sensorList[0].text().split(' ')[0],
+                "T2": self.sensorList[1].text().split(' ')[0]
+            }
+            csv_writer.writerow(data)
+        #dataLine = [float(_time)]
+        #for sensor in self.sensorList:
+         #   dataLine.append(float(sensor.text().split(' ')[0]))
         #print(dataLine)
-        self.queueData.put(dataLine)
-       
+        #self.queueData.put(dataLine)
+
     """
     def plotUpdate(self):
         _time = time.time()-self.startPlotTime
@@ -156,7 +170,7 @@ class MainWindow(QWidget):
             #else:
             #   self.step_plot += 1
         self.step = 0
-        self.canvas.draw() 
+        self.canvas.draw()
         #self.canvas.flush_events()
     """
 
@@ -268,7 +282,7 @@ class MainWindow(QWidget):
 
 
     def stopExit(self):
-        self.queueData.put('done and exit')
+        #self.queueData.put('done and exit')
         self.sensors.close()
         sys.exit(0)
 
