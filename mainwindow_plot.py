@@ -49,10 +49,16 @@ class MainWindow(QWidget):
         self.valueT3.setText('%.1f °C' % 0)
         self.valueT4.setText('%.1f °C' % 0)
         self.sensorList = [self.valueT1, self.valueT2, self.valueT3, self.valueT4, self.valueP1, self.valueP2]
+        self.sensorDict = {'T1': self.valueT1, 'T2': self.valueT2, 'T3': self.valueT3,
+                           'T4': self.valueT4, 'P1': self.valueP1, 'P2': self.valueP2,
+                           'Pos': self.valuePosition
+                           }
+
         self.step = 0
         self.step_plot = 0
         self.value = 0.0
         self.saving = None
+
         self._plot_ref = {}
         self.plotDataTime = []
         self.plotDataT1 = []
@@ -82,7 +88,7 @@ class MainWindow(QWidget):
         https://stackoverflow.com/questions/43861164/passing-data-between-separately-running-python-scripts
 
         """
-        self.fieldnames = ['time', 'T1', 'T2']
+        self.fieldnames = ['time'] + [key for key in self.sensorDict.keys()]
         with open('data.csv','w') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
             csv_writer.writeheader()
@@ -97,11 +103,17 @@ class MainWindow(QWidget):
             csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
 
             _time = time.time() - self.startPlotTime
-            data = {
-                "time": _time,
-                "T1": self.sensorList[0].text().split(' ')[0],
-                "T2": self.sensorList[1].text().split(' ')[0]
-            }
+            data = {}
+            for key in self.fieldnames:
+                if key == 'time':
+                    data[key] = _time
+                else:
+                    data[key] = self.sensorDict[key].text().split(' ')[0]
+            #data = {
+             #   "time": _time,
+              #  "T1": self.sensorList[0].text().split(' ')[0],
+               # "T2": self.sensorList[1].text().split(' ')[0]
+            #}
             csv_writer.writerow(data)
         #dataLine = [float(_time)]
         #for sensor in self.sensorList:
