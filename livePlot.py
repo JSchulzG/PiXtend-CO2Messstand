@@ -6,7 +6,11 @@ from itertools import count
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-
+"""
+TODO
+ -refactor
+ -layout
+"""
 plt.style.use('fivethirtyeight')
 #fig, (axT, axP, axPos) = plt.subplots(3)
 fig = plt.figure()
@@ -16,7 +20,7 @@ fig.suptitle('Live Plot Daten')
 start = True
 index = count()
 fieldnames = ['time', 'T1', 'T2', 'T3', 'T4', 'P1', 'P2', 'Pos']
-lengthPlot = 20.0
+lengthPlot = 45.0
 
 def animate(i):
     if Path('data.csv').is_file():
