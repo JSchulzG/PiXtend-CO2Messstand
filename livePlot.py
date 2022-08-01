@@ -33,18 +33,18 @@ p2 = []
 pos = []
 
 def animate(i):
-    if Path('data.csv').is_file():
-        data = pd.read_csv('data.csv')
-        with open('data2.csv', 'w') as csv_file:
+    if Path('tmp/data.csv').is_file():
+        data = pd.read_csv('tmp/data.csv')
+        with open('tmp/data2.csv', 'w') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             csv_writer.writeheader()
-        os.remove('data.csv')
+        os.remove('tmp/data.csv')
     else:
-        data = pd.read_csv('data2.csv')
-        with open('data.csv', 'w') as csv_file:
+        data = pd.read_csv('tmp/data2.csv')
+        with open('tmp/data.csv', 'w') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             csv_writer.writeheader()
-        os.remove('data2.csv')
+        os.remove('tmp/data2.csv')
 
     try:
         time.append(data['time'].mean())

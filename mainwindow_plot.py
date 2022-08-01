@@ -63,7 +63,7 @@ class MainWindow(QWidget):
         self.sensors = rOD.ReadFile(
             '/home/user/Documents/MessDaten/20220612/20220612162738_data.csv')
         self.fieldnames = ['time'] + list(self.sensorDict.keys())
-        with open('data.csv','w') as csv_file:
+        with open('tmp/data.csv','w') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
             csv_writer.writeheader()
         self.process = None
@@ -79,10 +79,10 @@ class MainWindow(QWidget):
         self.process = None
 
     def writeTempFile(self):
-        if Path('data.csv').is_file():
-            path = 'data.csv'
+        if Path('tmp/data.csv').is_file():
+            path = 'tmp/data.csv'
         else:
-            path = 'data2.csv'
+            path = 'tmp/data2.csv'
         with open(path, 'a') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
 
