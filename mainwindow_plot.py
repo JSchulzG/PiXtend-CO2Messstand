@@ -2,46 +2,39 @@
 import time
 import os
 from pathlib import Path
-import pandas as pd
 import sys
+from os.path import exists
+import pandas as pd
 
+import csv
+from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QWidget, QVBoxLayout
+from PyQt5.QtCore import QTimer
+import matplotlib
+import numpy as np
+from PyQt5 import QtWidgets
+from PyQt5.uic import loadUi
 #import readSensorData
 #import readDummySensors as rSD
 import readOldDataAsSensor as rOD
-import csv
-from os.path import exists
 
-import matplotlib
-matplotlib.use('Qt5Agg')
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-import matplotlib.ticker as ticker
-import numpy as np
+"""
+GUI for Messurement with PiXtendV2L
+"""
 
-from PyQt5 import QtWidgets
-from PyQt5.uic import loadUi
-from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QWidget, QVBoxLayout
-from PyQt5.QtCore import QTimer
-
-from multiprocessing import Process, Queue
-from pltData import GetData
-
-class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        self.fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.fig.add_subplot(111)
-        super(MplCanvas, self).__init__(self.fig)
-        self.fig.tight_layout()
-        self.axes.set_ylabel('T / [°C]')
 
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = self.load_ui()
-        self.writeList = [self.writeT1, self.writeT2, self.writeT3, self.writeT4, self.writeP1, self.writeP1, self.writeP2]
+        self.writeList = [self.writeT1, self.writeT2,
+                          self.writeT3, self.writeT4,
+                          self.writeP1, self.writeP1,
+                          self.writeP2]
         for i in self.writeList:
             i.setVisible(False)
-        self.checkSaveList = [self.checkSaveT1, self.checkSaveT2, self.checkSaveT3, self.checkSaveT4, self.checkSaveP1, self.checkSaveP2]
+        self.checkSaveList = [self.checkSaveT1, self.checkSaveT2,
+                              self.checkSaveT3, self.checkSaveT4,
+                              self.checkSaveP1, self.checkSaveP2]
 
         self.sliderPosition.setMinimum(1)
         self.sliderPosition.setMaximum(17)
@@ -50,28 +43,14 @@ class MainWindow(QWidget):
         self.valueT2.setText('%.1f °C' % 0)
         self.valueT3.setText('%.1f °C' % 0)
         self.valueT4.setText('%.1f °C' % 0)
-        self.sensorList = [self.valueT1, self.valueT2, self.valueT3, self.valueT4, self.valueP1, self.valueP2]
+        self.sensorList = [self.valueT1, self.valueT2, self.valueT3,
+                           self.valueT4, self.valueP1, self.valueP2]
         self.sensorDict = {'T1': self.valueT1, 'T2': self.valueT2, 'T3': self.valueT3,
                            'T4': self.valueT4, 'P1': self.valueP1, 'P2': self.valueP2,
-                           'Pos': self.valuePosition
-                           }
-
-        self.step = 0
-        self.step_plot = 0
+                           'Pos': self.valuePosition}
         self.value = 0.0
         self.saving = None
-
-        self._plot_ref = {}
-        self.plotDataTime = []
-        self.plotDataT1 = []
-        self.plotDataT2 = []
-        self.plotDataT3 = []
-        self.plotDataT4 = []
-        self.plotDataP1 = []
-        self.plotDataP2 = []
-        self.plotDataPos = []
-        # self.plotLength = 500
-
+        self.startPlotTime = time.time()
         self.data = {}
         self.qTimer = QTimer()
         self.qTimer.setInterval(50)  # 50ms max PiXtend is not as fast :(
@@ -79,27 +58,14 @@ class MainWindow(QWidget):
         self.qTimer.start()
         self.saveBtn.clicked.connect(self.writeData)
         self.stopBtn.clicked.connect(self.stopExit)
-        #self.canvas = MplCanvas(self)
-        #l = QVBoxLayout(self.plot2Widget)
-        #l.addWidget(self.canvas)
         #self.sensors = readSensorData.ReadSensorData()
         #self.sensors = rSD.ReadSensorData()
-        self.sensors = rOD.ReadFile('/home/user/Documents/MessDaten/20220612/20220612162738_data.csv')
-        #self.queueData = Queue()
-        """
-        start with multiprocessing see:
-        https://stackoverflow.com/questions/43861164/passing-data-between-separately-running-python-scripts
-
-        """
-        self.fieldnames = ['time'] + [key for key in self.sensorDict.keys()]
+        self.sensors = rOD.ReadFile(
+            '/home/user/Documents/MessDaten/20220612/20220612162738_data.csv')
+        self.fieldnames = ['time'] + list(self.sensorDict.keys())
         with open('data.csv','w') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
             csv_writer.writeheader()
-        #ploter = GetData()
-        #pltData = Process(target=ploter.getData, args=[self.queueData])
-        #pltData.deamon = True
-        #pltData.start()
-        self.startPlotTime = time.time()
 
     def writeTempFile(self):
         if Path('data.csv').is_file():
@@ -116,82 +82,7 @@ class MainWindow(QWidget):
                     data[key] = _time
                 else:
                     data[key] = self.sensorDict[key].text().split(' ')[0]
-            #data = {
-             #   "time": _time,
-              #  "T1": self.sensorList[0].text().split(' ')[0],
-               # "T2": self.sensorList[1].text().split(' ')[0]
-            #}
             csv_writer.writerow(data)
-        #dataLine = [float(_time)]
-        #for sensor in self.sensorList:
-         #   dataLine.append(float(sensor.text().split(' ')[0]))
-        #print(dataLine)
-        #self.queueData.put(dataLine)
-
-    """
-    def plotUpdate(self):
-        _time = time.time()-self.startPlotTime
-        self.plotDataTime.append(_time)
-        self.plotDataT1.append(float(self.valueT1.text().split(' ')[0]))
-        self.plotDataT2.append(float(self.valueT2.text().split(' ')[0]))
-        self.plotDataT3.append(float(self.valueT3.text().split(' ')[0]))
-        self.plotDataT4.append(float(self.valueT4.text().split(' ')[0]))
-        self.plotDataP1.append(float(self.valueP1.text().split(' ')[0]))
-        self.plotDataP2.append(float(self.valueP2.text().split(' ')[0]))
-        self.plotDataPos.append(float(self.valuePosition.text().split(' ')[0]))
-
-        if len(self._plot_ref) == 0:
-            self.canvas.axes.set_facecolor((0, 0, 0))
-            self.canvas.axes.yaxis.grid(True, linestyle='--')
-            self.canvas.axes.set_xlim(0, 10)
-            self.canvas.axes.set_ylim(0, 100)
-            plotT1_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataT1, color=(0,1,0.29))
-            print(plotT1_refs[0])
-            self._plot_ref['T1'] = plotT1_refs[0]
-            plotT2_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataT2, color=(0,1,0))
-            self._plot_ref['T2'] = plotT2_refs[0]
-            plotT3_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataT3, color=(1,0,0.29))
-            self._plot_ref['T3'] = plotT3_refs[0]
-            plotT4_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataT4, color=(1,0,0))
-            self._plot_ref['T4'] = plotT4_refs[0]
-            plotP1_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataP1, color=(0,1,1))
-            self._plot_ref['P1'] = plotP1_refs[0]
-            plotP2_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataP2, color=(0,1,1))
-            self._plot_ref['P2'] = plotP2_refs[0]
-            plotPos_refs = self.canvas.axes.plot(self.plotDataTime, self.plotDataPos, color=(1,1,1))
-            self._plot_ref['Pos'] = plotPos_refs[0]
-        else:
-            if len(self.plotDataTime) < self.plotLength.value():
-                self.canvas.axes.set_xlim(0, self.plotDataTime[-1])
-            else:
-                self.canvas.axes.set_xlim(self.plotDataTime[-self.plotLength.value()], self.plotDataTime[-1])
-            if self.checkSaveT1.isChecked() is True:
-            #if self.step_plot == 0 and self.checkSaveT1.isChecked() is True:
-                self._plot_ref['T1'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataT1[-self.plotLength.value():])
-            if self.checkSaveT2.isChecked() is True:
-            #if self.step_plot == 1 and self.checkSaveT2.isChecked() is True:
-                self._plot_ref['T2'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataT2[-self.plotLength.value():])
-            if self.checkSaveT3.isChecked() is True:
-            #if self.step_plot == 2 and self.checkSaveT3.isChecked() is True:
-                self._plot_ref['T3'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataT3[-self.plotLength.value():])
-            if self.checkSaveT4.isChecked() is True:
-            #if self.step_plot == 3 and self.checkSaveT4.isChecked() is True:
-                self._plot_ref['T4'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataT4[-self.plotLength.value():])
-            if self.checkSaveP1.isChecked() is True:
-            #if self.step_plot == 4 and self.checkSaveP1.isChecked() is True:
-                self._plot_ref['P1'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataP1[-self.plotLength.value():])
-            if self.checkSaveP2.isChecked() is True:
-            #if self.step_plot == 5 and self.checkSaveP2.isChecked() is True:
-                self._plot_ref['P2'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataP2[-self.plotLength.value():])
-            #if self.step_plot == 6:
-            self._plot_ref['Pos'].set_data(self.plotDataTime[-self.plotLength.value():], self.plotDataPos[-self.plotLength.value():])
-            self.step_plot = 0
-            #else:
-            #   self.step_plot += 1
-        self.step = 0
-        self.canvas.draw()
-        #self.canvas.flush_events()
-    """
 
     def load_ui(self):
         path = os.fspath(Path(__file__).resolve().parent / "form.ui")
@@ -227,22 +118,7 @@ class MainWindow(QWidget):
                 self.data['P2/[Bar]'].append(self.valueP2.text().split(' ')[0])
             self.data['Pos/[cm]'].append(self.valuePosition.text().split(' ')[0])
             self.data['TOut/[°C]'].append(self.valueTOut.text().split(' ')[0])
-
         self.writeTempFile()
-        #if self.step > :
-        #self.plotUpdate()
-        #self.step += 1
-        #self.step_plot += 1
-        """            if self.checkSaveP1.isChecked() is True:
-            self.data['P1 / [Bar]'] = []
-            self.writeP1.setVisible(True)
-
-        if self.step_plot >10:
-            self.plotUpdate()
-            self.step_plot = 0
-
-        """
-
 
     def writeData(self):
         if self.saving is False or self.saving is None:
@@ -299,7 +175,6 @@ class MainWindow(QWidget):
             self.saveBtn.setStyleSheet("""background-color:white;
                 border-radius:10px; font: 12pt "Ubuntu";""")
 
-
     def stopExit(self):
         #self.queueData.put('done and exit')
         self.sensors.close()
@@ -312,6 +187,6 @@ if __name__ == "__main__":
     widget.show()
     try:
         sys.exit(app.exec_())
-    except Exception:
 
+    except Exception:
         print("Exiting")
