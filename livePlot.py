@@ -13,15 +13,14 @@ TODO
  -layout
 """
 plt.style.use('fivethirtyeight')
-#fig, (axT, axP, axPos) = plt.subplots(3)
-fig = plt.figure()
-gs = fig.add_gridspec(3, hspace=0)
+fig = plt.figure(tight_layout=False)
+gs = fig.add_gridspec(3, hspace=0.1)
 axT, axP, axPos = gs.subplots(sharex=True)
+axT.set(ylabel='°C')
+axP.set(ylabel='Bar')
+axPos.set(ylabel='cm')
 fig.suptitle('Live Plot Daten')
-start = True
-index = count()
 fieldnames = ['time', 'T1', 'T2', 'T3', 'T4', 'P1', 'P2', 'Pos']
-lengthPlot = 45.0
 _plot_ref = {}
 time = []
 t1 = []
@@ -32,7 +31,16 @@ p1 = []
 p2 = []
 pos = []
 
-def animate(i):
+tMin = 50
+tMax = 10
+pMin = 60
+pMax = 10
+dataDict = {'time': time,'T1': t1, 'T2': t2, 'T3': t3,
+            'T4': t4, 'P1': p1, 'P2': p2, 'Pos': pos}
+
+def animate(i): #, tMin, tMax, pMin, pMax):
+    tMin, tMax = axT.get_ylim()
+    pMin, pMax = axP.get_ylim()
     if Path('tmp/data.csv').is_file():
         data = pd.read_csv('tmp/data.csv')
         with open('tmp/data2.csv', 'w') as csv_file:
@@ -51,41 +59,33 @@ def animate(i):
     except:
         print('data vault')
         return
+    for row in fieldnames:
+        x = round(data[row].mean(),1)
+        if 'T' in row and (x<tMin):
+            tMin = x-2
+        if 'T' in row and tMax < x: tMax = x+2
+        if 'Pos' not in row:
+            if 'P' in row and pMin > x: pMin = x-2
+            if 'P' in row and pMax < x: pMax = x+2
+        if 'time' not in row:
+            dataDict[row].append(x)
 
-    t1.append(round(data['T1'].mean(), 1))
-    t2.append(round(data['T2'].mean(), 1))
-    t3.append(round(data['T3'].mean(), 1))
-    t4.append(round(data['T4'].mean(), 1))
-    p1.append(round(data['P1'].mean(), 2))
-    p2.append(round(data['P2'].mean(), 2))
-    pos.append(round(data['Pos'].mean(), 0))
-    #print(time)
-    #plt.cla()
-    #if start == True:
-    #    start_time = time[0]
-    #    stat = False
-    #    print(start_time)
-    #if time[1] > lengthPlot:
-    #    axT.set_xlim(time[1]-lengthPlot, time[1])
-    #    axP.set_xlim(time[1]-lengthPlot, time[1])
-    #    axPos.set_xlim(time[1]-lengthPlot, time[1])
-    #axT.plot.clr()
     if len(_plot_ref) == 0:
-        _plot_ref['T1'] = axT.plot(time, t1, color='red', marker='.', label='T1')[0]
-        _plot_ref['T2'] = axT.plot(time, t2, color='red', marker='.')[0]
-        _plot_ref['T3'] = axT.plot(time, t3, color='green', marker='.')[0]
-        _plot_ref['T4'] = axT.plot(time, t4, color='green', marker='.')[0]
-        _plot_ref['P1'] = axP.plot(time, p1, color='red', marker='.')[0]
-        _plot_ref['P2'] = axP.plot(time, p2, color='green', marker='.')[0]
-        _plot_ref['Pos'] = axPos.plot(time, pos, color='blue', marker='.')[0]
-        axT.set_ylim(10,50)
-        axP.set_ylim(30,90)
+        _plot_ref['T1'] = axT.plot(time, t1, color='#ff5000', marker='.', label='T1')[0]
+        _plot_ref['T2'] = axT.plot(time, t2, color='#ff0000', marker='.', label='T2')[0]
+        _plot_ref['T3'] = axT.plot(time, t3, color='#30f', marker='.', label='T3')[0]
+        _plot_ref['T4'] = axT.plot(time, t4, color='#328', marker='.', label='T4')[0]
+        _plot_ref['P1'] = axP.plot(time, p1, color='red', marker='.', label='P1')[0]
+        _plot_ref['P2'] = axP.plot(time, p2, color='#60f', marker='.', label='P2')[0]
+        _plot_ref['Pos'] = axPos.plot(time, pos, color='blue', marker='.', label='Position')[0]
+        #axT.set_ylim(20,45)
+        axP.set_ylim(60,62)
         axPos.set_ylim(0,20)
     else:
-        #axT.autoscale()
         axT.set_xlim(time[0], time[-1])
-        #axT.set_ylim()
+        axT.set_ylim(tMin, tMax)
         axP.set_xlim(time[0], time[-1])
+        axP.set_ylim(pMin, pMax)
         axPos.set_xlim(time[0], time[-1])
         _plot_ref['T1'].set_data(time, t1)
         _plot_ref['T2'].set_data(time, t2)
@@ -94,20 +94,11 @@ def animate(i):
         _plot_ref['P1'].set_data(time, p1)
         _plot_ref['P2'].set_data(time, p2)
         _plot_ref['Pos'].set_data(time, pos)
-    #axT.plot(time, t2, color='red', marker='.')
-    #axT.plot(time, t3, color='green', marker='.')
-    #axT.plot(time, t4, color='green', marker='.')
-    #axP.plot(time, p1, color='red', marker='.')
-    #axP.plot(time, p2, color='green', marker='.', linestyle='None')
-    #axPos.plot(time, pos, color='blue', marker='.', linestyle='None')
-    #axT.label_outer()
-    #axP.label_outer()
-    #axPos.label_outer()
-    plt.tight_layout()
+    axT.legend(loc='center left', bbox_to_anchor=(0, 0.5))
+    axP.legend(loc='center left', bbox_to_anchor=(0, 0.5))
+    axPos.legend(loc='center left', bbox_to_anchor=(0, 0.5))
 
+ani = FuncAnimation(plt.gcf(), animate, interval=300)# fargs=(tMin, tMax, pMin, pMax), interval=300)
 
-ani = FuncAnimation(plt.gcf(), animate, interval=300)
-
-plt.tight_layout()
 plt.show()
 
