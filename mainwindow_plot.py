@@ -13,9 +13,9 @@ import matplotlib
 import numpy as np
 from PyQt5 import QtWidgets
 from PyQt5.uic import loadUi
-#import readSensorData
+import readSensorData
 #import readDummySensors as rSD
-import readOldDataAsSensor as rOD
+#import readOldDataAsSensor as rOD
 
 """
 GUI for Messurement with PiXtendV2L
@@ -58,10 +58,10 @@ class MainWindow(QWidget):
         self.qTimer.start()
         self.saveBtn.clicked.connect(self.writeData)
         self.stopBtn.clicked.connect(self.stopExit)
-        #self.sensors = readSensorData.ReadSensorData()
+        self.sensors = readSensorData.ReadSensorData()
         #self.sensors = rSD.ReadSensorData()
-        self.sensors = rOD.ReadFile(
-            '/home/user/Documents/MessDaten/20220612/20220612162738_data.csv')
+        #self.sensors = rOD.ReadFile(
+        #    '/home/user/Documents/MessDaten/20220612/20220612162738_data.csv')
         self.fieldnames = ['time'] + list(self.sensorDict.keys())
         with open('tmp/data.csv','w') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)

@@ -5,8 +5,8 @@ from pathlib import Path
 import pandas as pd
 import sys
 
-#import readSensorData
-import readDummySensors as rSD
+import readSensorData
+#import readDummySensors as rSD
 
 import numpy as np
 
@@ -50,8 +50,8 @@ class MainWindow(QWidget):
         #self.canvas = MplCanvas(self)
         #l = QVBoxLayout(self.plot2Widget)
         #l.addWidget(self.canvas)
-        #self.sensors = readSensorData.ReadSensorData()
-        self.sensors = rSD.ReadSensorData()
+        self.sensors = readSensorData.ReadSensorData()
+        #self.sensors = rSD.ReadSensorData()
 
     def load_ui(self):
         path = os.fspath(Path(__file__).resolve().parent / "form.ui")
