@@ -6,7 +6,8 @@ import pandas as pd
 import sys
 
 #import readSensorData
-import readDummySensors as rSD
+#import readDummySensors as rSD
+import readOldDataAsSensor as rOD
 import csv
 from os.path import exists
 
@@ -82,7 +83,8 @@ class MainWindow(QWidget):
         #l = QVBoxLayout(self.plot2Widget)
         #l.addWidget(self.canvas)
         #self.sensors = readSensorData.ReadSensorData()
-        self.sensors = rSD.ReadSensorData()
+        #self.sensors = rSD.ReadSensorData()
+        self.sensors = rOD.ReadFile('/home/user/Documents/MessDaten/20220612/20220612162738_data.csv')
         #self.queueData = Queue()
         """
         start with multiprocessing see:
