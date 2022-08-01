@@ -8,7 +8,7 @@ import pandas as pd
 
 import csv
 from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QWidget, QVBoxLayout
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, QProcess
 import matplotlib
 import numpy as np
 from PyQt5 import QtWidgets
@@ -66,6 +66,17 @@ class MainWindow(QWidget):
         with open('data.csv','w') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
             csv_writer.writeheader()
+        self.process = None
+        self.plotData.pressed.connect(self.startPlot)
+
+    def startPlot(self):
+        if self.process is None:
+            self.process = QProcess()
+            self.process.finished.connect(self.process_finished)
+            self.process.start("python3", ['livePlot.py'])
+
+    def process_finished(self):
+        self.process = None
 
     def writeTempFile(self):
         if Path('data.csv').is_file():
