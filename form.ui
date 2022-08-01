@@ -23,57 +23,15 @@ border-color: rgb(85, 87, 83);
 border: 2px solid;}</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="7" column="6">
-       <widget class="QLabel" name="label">
-        <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
-        </property>
-        <property name="text">
-         <string>Position:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="5">
-       <widget class="QCheckBox" name="checkSaveP2">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QLabel" name="labelT1">
-        <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
-        </property>
-        <property name="text">
-         <string>Temp 1:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="4">
-       <widget class="QLabel" name="writeT3">
-        <property name="enabled">
-         <bool>true</bool>
+      <item row="5" column="7">
+       <widget class="QLineEdit" name="valueT4">
+        <property name="cursor">
+         <cursorShape>ForbiddenCursor</cursorShape>
         </property>
         <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;
-color: rgb(204, 0, 0);</string>
-        </property>
-        <property name="text">
-         <string>write</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="5">
-       <widget class="QCheckBox" name="checkSaveT4">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+         <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
+border-color: rgb(0, 0, 0);
+border: 2px solid;</string>
         </property>
        </widget>
       </item>
@@ -91,78 +49,27 @@ color: rgb(204, 0, 0);</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="7">
-       <widget class="QLineEdit" name="valueT3">
-        <property name="cursor">
-         <cursorShape>ForbiddenCursor</cursorShape>
-        </property>
+      <item row="0" column="0" colspan="4">
+       <widget class="QLabel" name="windowTitel">
         <property name="styleSheet">
-         <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
-border-color: rgb(0, 0, 0);
-border: 2px solid;</string>
+         <string notr="true">font: 16pt &quot;Ubuntu&quot;;</string>
+        </property>
+        <property name="text">
+         <string>CO2 Messstand</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="writeT1">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+      <item row="6" column="4">
+       <widget class="QLabel" name="writeP2">
         <property name="styleSheet">
          <string notr="true">font: 12pt &quot;Ubuntu&quot;;
 color: rgb(204, 0, 0);</string>
         </property>
         <property name="text">
          <string>write</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="5">
-       <widget class="QCheckBox" name="checkSaveT3">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QCheckBox" name="checkSaveT2">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="4">
-       <widget class="QLabel" name="writeT4">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;
-color: rgb(204, 0, 0);</string>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="text">
-         <string>write</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3">
-       <widget class="QLineEdit" name="valueT1">
-        <property name="cursor">
-         <cursorShape>ForbiddenCursor</cursorShape>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
-border-color: rgb(0, 0, 0);
-border: 2px solid;</string>
         </property>
        </widget>
       </item>
@@ -178,58 +85,37 @@ border: 2px solid;</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="7">
-       <widget class="QLineEdit" name="valueT4">
-        <property name="cursor">
-         <cursorShape>ForbiddenCursor</cursorShape>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
-border-color: rgb(0, 0, 0);
-border: 2px solid;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QLabel" name="labelT2">
+      <item row="7" column="6">
+       <widget class="QLabel" name="label">
         <property name="styleSheet">
          <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
-         <string>Temp 2:</string>
+         <string>Position:</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="6">
-       <widget class="QLabel" name="labelT4">
-        <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
-        </property>
+      <item row="4" column="5">
+       <widget class="QCheckBox" name="checkSaveT3">
         <property name="text">
-         <string>Temp 4:</string>
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="0" column="0" colspan="4">
-       <widget class="QLabel" name="windowTitel">
+      <item row="4" column="0">
+       <widget class="QLabel" name="writeT1">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="styleSheet">
-         <string notr="true">font: 16pt &quot;Ubuntu&quot;;</string>
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;
+color: rgb(204, 0, 0);</string>
         </property>
         <property name="text">
-         <string>CO2 Messstand</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="6">
-       <widget class="QLabel" name="labelT3">
-        <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
-        </property>
-        <property name="text">
-         <string>Temp 3:</string>
+         <string>write</string>
         </property>
        </widget>
       </item>
@@ -252,29 +138,11 @@ border: 2px solid;</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="2">
-       <widget class="QLabel" name="label_P1">
-        <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
+      <item row="4" column="4">
+       <widget class="QLabel" name="writeT3">
+        <property name="enabled">
+         <bool>true</bool>
         </property>
-        <property name="text">
-         <string>Druck 1:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="writeP1">
-        <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;Ubuntu&quot;;
-color: rgb(204, 0, 0);</string>
-        </property>
-        <property name="text">
-         <string>write</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="4">
-       <widget class="QLabel" name="writeP2">
         <property name="styleSheet">
          <string notr="true">font: 12pt &quot;Ubuntu&quot;;
 color: rgb(204, 0, 0);</string>
@@ -294,6 +162,16 @@ color: rgb(204, 0, 0);</string>
         </property>
        </widget>
       </item>
+      <item row="5" column="5">
+       <widget class="QCheckBox" name="checkSaveT4">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
       <item row="6" column="6">
        <widget class="QLabel" name="label_P2">
         <property name="styleSheet">
@@ -304,8 +182,8 @@ color: rgb(204, 0, 0);</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="3">
-       <widget class="QLineEdit" name="valueP1">
+      <item row="7" column="3">
+       <widget class="QLineEdit" name="valueTOut">
         <property name="styleSheet">
          <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
 border-color: rgb(0, 0, 0);
@@ -313,8 +191,28 @@ border: 2px solid;</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="7">
-       <widget class="QLineEdit" name="valuePosition">
+      <item row="7" column="2">
+       <widget class="QLabel" name="labelTOUT">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
+        </property>
+        <property name="text">
+         <string>T Raum:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="7">
+       <widget class="QSlider" name="sliderPosition">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="7">
+       <widget class="QLineEdit" name="valueT3">
+        <property name="cursor">
+         <cursorShape>ForbiddenCursor</cursorShape>
+        </property>
         <property name="styleSheet">
          <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
 border-color: rgb(0, 0, 0);
@@ -322,8 +220,26 @@ border: 2px solid;</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="4" colspan="4">
-       <widget class="QWidget" name="plot2Widget" native="true"/>
+      <item row="6" column="0">
+       <widget class="QLabel" name="writeP1">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;
+color: rgb(204, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string>write</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="5">
+       <widget class="QCheckBox" name="checkSaveP2">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item row="9" column="0" colspan="4">
        <widget class="QWidget" name="plotWidget" native="true">
@@ -366,15 +282,8 @@ font: 12pt &quot;Ubuntu&quot;;</string>
         </layout>
        </widget>
       </item>
-      <item row="8" column="7">
-       <widget class="QSlider" name="sliderPosition">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="3">
-       <widget class="QLineEdit" name="valueTOut">
+      <item row="6" column="3">
+       <widget class="QLineEdit" name="valueP1">
         <property name="styleSheet">
          <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
 border-color: rgb(0, 0, 0);
@@ -382,14 +291,123 @@ border: 2px solid;</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="2">
-       <widget class="QLabel" name="labelTOUT">
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="checkSaveT2">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QLabel" name="label_P1">
         <property name="styleSheet">
          <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
         </property>
         <property name="text">
-         <string>T Raum:</string>
+         <string>Druck 1:</string>
         </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QLabel" name="labelT1">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Temp 1:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="7">
+       <widget class="QLineEdit" name="valuePosition">
+        <property name="styleSheet">
+         <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
+border-color: rgb(0, 0, 0);
+border: 2px solid;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLineEdit" name="valueT1">
+        <property name="cursor">
+         <cursorShape>ForbiddenCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 500 12pt &quot;Ubuntu&quot;;
+border-color: rgb(0, 0, 0);
+border: 2px solid;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="4">
+       <widget class="QLabel" name="writeT4">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;
+color: rgb(204, 0, 0);</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="text">
+         <string>write</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QLabel" name="labelT2">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Temp 2:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="6">
+       <widget class="QLabel" name="labelT3">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Temp 3:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="6">
+       <widget class="QLabel" name="labelT4">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;Ubuntu&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Temp 4:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="4" colspan="4">
+       <widget class="QWidget" name="plot2Widget" native="true">
+        <widget class="QPushButton" name="plotData">
+         <property name="geometry">
+          <rect>
+           <x>350</x>
+           <y>320</y>
+           <width>83</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+font: 12pt &quot;Ubuntu&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Plot Data</string>
+         </property>
+        </widget>
        </widget>
       </item>
      </layout>

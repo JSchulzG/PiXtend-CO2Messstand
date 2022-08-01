@@ -3,3 +3,5 @@ data/
 mainwindow.py.save
 venv/
 dummi_readSensorData.py
+data.csv
+data2.csv

@@ -5,14 +5,9 @@ from pathlib import Path
 import pandas as pd
 import sys
 
-import readSensorData
-import dummi_readSensorData as rSD
+#import readSensorData
+import readDummySensors as rSD
 
-#import matplotlib
-#matplotlib.use('Qt5Agg')
-#from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-#from matplotlib.figure import Figure
-#import matplotlib.ticker as ticker
 import numpy as np
 
 
@@ -24,15 +19,6 @@ from PyQt5.QtCore import QTimer
 
 
 
-"""
-class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        self.fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.fig.add_subplot(111)
-        super(MplCanvas, self).__init__(self.fig)
-        self.fig.tight_layout()
-        self.axes.set_ylabel('T / [°C]')
-"""
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -64,44 +50,8 @@ class MainWindow(QWidget):
         #self.canvas = MplCanvas(self)
         #l = QVBoxLayout(self.plot2Widget)
         #l.addWidget(self.canvas)
-        self.sensors = readSensorData.ReadSensorData()
-        #self.dummiSensor = rSD.ReadTemperature()
-    """
-    def plotUpdate(self):
-        try:
-            #self.plotdataT1 = np.vstack((self.plotdataT1, float(self.valueT1.text().split(' ')[0])))[-5:]
-            #self.plotdataT2 = np.vstack((self.plotdataT2, float(self.valueT2.text().split(' ')[0])))[-5:]
-            self.plotdataT3 = np.vstack((self.plotdataT3, float(self.valueT3.text().split(' ')[0])))[-5:]
-            self.plotdataT4 = np.vstack((self.plotdataT4, float(self.valueT4.text().split(' ')[0])))[-5:]
-            self.plotdataP1 = np.vstack((self.plotdataP1, float(self.valueP1.text().split(' ')[0])))[-5:]
-            self.plotdataP2 = np.vstack((self.plotdataP2, float(self.valueP2.text().split(' ')[0])))[-5:]
-
-        except:
-            # first data point
-            print('except')
-            #self.plotdataT1 = np.array([[(float(self.valueT1.text().split(' ')[0]))]])
-            #self.plotdataT2 = np.array([[(float(self.valueT2.text().split(' ')[0]))]])
-            self.plotdataT3 = np.array([[(float(self.valueT3.text().split(' ')[0]))]])
-            self.plotdataT4 = np.array([[(float(self.valueT4.text().split(' ')[0]))]])
-            self.plotdataP1 = np.array([[(float(self.valueP1.text().split(' ')[0]))]])
-            self.plotdataP2 = np.array([[(float(self.valueP2.text().split(' ')[0]))]])
-        #self.ydata = self.plotdata
-
-        self.canvas.axes.clear()
-        self.canvas.axes.set_facecolor((0, 0, 0))
-        self.canvas.axes.yaxis.grid(True, linestyle='--')
-        start, end = self.canvas.axes.get_ylim()
-        self.canvas.axes.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
-        self.canvas.axes.set_autoscale_on(True)  #set_ylim( ymin=0, ymax=100)
-        #self.canvas.axes.plot(self.plotdataT1, color=(0,1,0.29))
-        #self.canvas.axes.plot(self.plotdataT2, color=(0,1,0))
-        self.canvas.axes.plot(self.plotdataT3, color=(1,0,0.29))
-        self.canvas.axes.plot(self.plotdataT4, color=(1,0,0))
-        self.canvas.axes.plot(self.plotdataP1, color=(0,1,1))
-        self.canvas.axes.plot(self.plotdataP2, color=(0,1,1))
-        self.canvas.draw()
-        self.canvas.flush_events()
-        """
+        #self.sensors = readSensorData.ReadSensorData()
+        self.sensors = rSD.ReadSensorData()
 
     def load_ui(self):
         path = os.fspath(Path(__file__).resolve().parent / "form.ui")
@@ -137,18 +87,6 @@ class MainWindow(QWidget):
                 self.data['P2/[Bar]'].append(self.valueP2.text().split(' ')[0])
             self.data['Pos/[cm]'].append(self.valuePosition.text().split(' ')[0])
             self.data['TOut/[°C]'].append(self.valueTOut.text().split(' ')[0])
-
-        #self.step += 1
-        #self.step_plot += 1
-        """            if self.checkSaveP1.isChecked() is True:
-            self.data['P1 / [Bar]'] = []
-            self.writeP1.setVisible(True)
-
-        if self.step_plot >10:
-            self.plotUpdate()
-            self.step_plot = 0
-
-        """
 
 
     def writeData(self):
