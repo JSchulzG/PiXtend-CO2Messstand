@@ -48,7 +48,11 @@ class ReadSensorData():
         data.append(raw_Data*scalling_P + offset_P)
         raw_Data = self.p.analog_in5
         data.append(raw_Data*scalling_P + offset_P)
-        distance, temp = self.getTFminiData()
+        try:
+            distance, temp = self.getTFminiData()
+        except:
+            distance = 99
+            temp = 9999 
         data.append(distance)
         data.append(temp)
         return data

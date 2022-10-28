@@ -167,7 +167,7 @@ class MainWindow(QWidget):
             print(df)
             _now = time.time()
             fileName = time.strftime('%Y%m%d%H%M%S', time.localtime(_now))+ '_data.csv'
-            path = "/home/user/Documents/daten/" + fileName
+            path = "/home/pi/Dokumente/daten/" + fileName
             f = open(path, 'w')
 
             f.write(self.kommentar.toPlainText())
