@@ -7,10 +7,12 @@ class ReadSensorData():
     def __init__(self):
         self.p = PiXtendV2L()
         time.sleep(0.5)
-        self.ser = serial.Serial("/dev/ttyUSB0", 115200)
-        if self.ser.is_open == False:
-            self.ser.open()
-
+        try:
+            self.ser = serial.Serial("/dev/ttyUSB0", 115200)
+            if self.ser.is_open == False:
+                self.ser.open()
+        except:
+            self.ser = None
 
 
     def close(self):
