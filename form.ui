@@ -392,16 +392,6 @@ color: rgb(204, 0, 0);</string>
       <item row="9" column="4" colspan="4">
        <widget class="QWidget" name="plot2Widget" native="true">
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="1" column="0">
-          <widget class="QFrame" name="frame">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="1">
           <widget class="QPushButton" name="plotData">
            <property name="styleSheet">
@@ -416,7 +406,7 @@ font: 12pt &quot;Ubuntu&quot;;</string>
          <item row="0" column="1">
           <widget class="QFrame" name="frame_3">
            <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+            <enum>QFrame::Panel</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
@@ -438,19 +428,6 @@ font: 12pt &quot;Ubuntu&quot;;</string>
             </item>
             <item>
              <widget class="QSpinBox" name="spinBox_3"/>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
             </item>
             <item>
              <widget class="QLabel" name="label_5">
@@ -487,8 +464,12 @@ font: 12pt &quot;Ubuntu&quot;;</string>
          </item>
          <item row="0" column="0">
           <widget class="QFrame" name="frame_2">
+           <property name="styleSheet">
+            <string notr="true">
+</string>
+           </property>
            <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+            <enum>QFrame::Panel</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
@@ -521,8 +502,33 @@ font: 12pt &quot;Ubuntu&quot;;</string>
             <item>
              <widget class="QPushButton" name="pushButton_3">
               <property name="styleSheet">
-               <string notr="true">border-radius: 50;
-background-color: rgb(255, 12, 28);</string>
+               <string notr="true">QPushButton {
+    color: #333;
+    border: 2px solid #555;
+    border-radius: 20px;
+    border-style: outset;
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #888
+        );
+    padding: 5px;
+    }
+
+QPushButton:hover {
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #bbb
+        );
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background: qradialgradient(
+        cx: 0.4, cy: -0.1, fx: 0.4, fy: -0.1,
+        radius: 1.35, stop: 0 #fff, stop: 1 #ddd
+        );
+    }
+</string>
               </property>
               <property name="text">
                <string>PushButton</string>
