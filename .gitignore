@@ -1,5 +1,6 @@
 __pycache__/
 data/
+daten/
 mainwindow.py.save
 venv/
 dummi_readSensorData.py
