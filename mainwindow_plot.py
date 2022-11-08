@@ -68,6 +68,11 @@ class MainWindow(QWidget):
             csv_writer.writeheader()
         self.process = None
         self.plotData.pressed.connect(self.startPlot)
+        self.leftWarm.pressed.connect(self.warmLeft)
+        self.leftCold.pressed.connect(self.sensors.coldLeftSide())
+
+    def warmLeft(self):
+        self.sensors.heatLeftSide()
 
     def startPlot(self):
         if self.process is None:

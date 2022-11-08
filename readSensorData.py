@@ -30,6 +30,22 @@ class ReadSensorData():
                 temp = recv[6] + recv[7]*256
                 return (distance, temp)
 
+    def heatLeftSide(self):
+        p.digital_out0 = True
+        p.digital_out1 = False
+
+    def coldLeftSide(self):
+        p.digital_out0 = False
+        p.digital_out1 = True
+
+    def heatRightSide(self):
+        p.digital_out2 = True
+        p.digital_out3 = False
+
+    def coldRightSide(self):
+        p.digital_out2 = False
+        p.digital_out3 = True
+
     def read_Data(self):
         data = []
         scalling_T = 10.0
@@ -54,7 +70,7 @@ class ReadSensorData():
             distance, temp = self.getTFminiData()
         except:
             distance = 99
-            temp = 9999 
+            temp = 9999
         data.append(distance)
         data.append(temp)
         return data

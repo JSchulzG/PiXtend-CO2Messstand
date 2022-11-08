@@ -415,12 +415,12 @@ font: 12pt &quot;Ubuntu&quot;;</string>
             <item>
              <widget class="QLabel" name="label_4">
               <property name="text">
-               <string>TextLabel</string>
+               <string>Rechts Warm</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="rightWarm">
               <property name="text">
                <string>PushButton</string>
               </property>
@@ -432,12 +432,12 @@ font: 12pt &quot;Ubuntu&quot;;</string>
             <item>
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>TextLabel</string>
+               <string>Rechts Kalt</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="rightCold">
               <property name="text">
                <string>PushButton</string>
               </property>
@@ -465,8 +465,7 @@ font: 12pt &quot;Ubuntu&quot;;</string>
          <item row="0" column="0">
           <widget class="QFrame" name="frame_2">
            <property name="styleSheet">
-            <string notr="true">
-</string>
+            <string notr="true"/>
            </property>
            <property name="frameShape">
             <enum>QFrame::Panel</enum>
@@ -483,7 +482,7 @@ font: 12pt &quot;Ubuntu&quot;;</string>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="leftWarm">
               <property name="text">
                <string>PushButton</string>
               </property>
@@ -495,40 +494,17 @@ font: 12pt &quot;Ubuntu&quot;;</string>
             <item>
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>TextLabel</string>
+               <string>Links Kalt</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="leftCold">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="styleSheet">
-               <string notr="true">QPushButton {
-    color: #333;
-    border: 2px solid #555;
-    border-radius: 20px;
-    border-style: outset;
-    background: qradialgradient(
-        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
-        radius: 1.35, stop: 0 #fff, stop: 1 #888
-        );
-    padding: 5px;
-    }
-
-QPushButton:hover {
-    background: qradialgradient(
-        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
-        radius: 1.35, stop: 0 #fff, stop: 1 #bbb
-        );
-    }
-
-QPushButton:pressed {
-    border-style: inset;
-    background: qradialgradient(
-        cx: 0.4, cy: -0.1, fx: 0.4, fy: -0.1,
-        radius: 1.35, stop: 0 #fff, stop: 1 #ddd
-        );
-    }
-</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string>PushButton</string>
