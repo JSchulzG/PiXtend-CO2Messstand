@@ -13,7 +13,8 @@ class ReadSensorData():
                 self.ser.open()
         except:
             self.ser = None
-
+        self.dummyPos = 42.0
+        self.dummyDirection = 'right'
 
     def close(self):
         time.sleep(1)
@@ -29,6 +30,17 @@ class ReadSensorData():
                 distance = recv[2] + recv[3]*256
                 temp = recv[6] + recv[7]*256
                 return (distance, temp)
+
+    def distanceDummy(self):
+        if self.dummyDirection == 'right':
+            self.dummyPos += 0.01
+        else:
+            self.dummyPos -= 0.01
+        if self.dummyPos >= 50:
+            self.dummyDirection = 'left'
+        if self.dummyPos <= 42.05:
+            self.dummyDirection = 'right'
+        return (self.dummyPos, 23.3)
 
     def heatLeftSide(self):
         self.p.digital_out0 = True
@@ -66,11 +78,14 @@ class ReadSensorData():
         data.append(raw_Data*scalling_P + offset_P)
         raw_Data = self.p.analog_in5
         data.append(raw_Data*scalling_P + offset_P)
+        '''
         try:
             distance, temp = self.getTFminiData()
         except:
             distance = 99
             temp = 9999
+        '''
+        distance, temp = self.distanceDummy()
         data.append(distance)
         data.append(temp)
         return data
