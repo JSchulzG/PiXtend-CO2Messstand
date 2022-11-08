@@ -13,7 +13,7 @@ class ReadSensorData():
                 self.ser.open()
         except:
             self.ser = None
-        self.dummyPos = 42.0
+        self.dummyPos = 22.0
         self.dummyDirection = 'right'
 
     def close(self):
@@ -33,12 +33,12 @@ class ReadSensorData():
 
     def distanceDummy(self):
         if self.dummyDirection == 'right':
-            self.dummyPos += 0.01
+            self.dummyPos += 0.02
         else:
-            self.dummyPos -= 0.01
-        if self.dummyPos >= 50:
+            self.dummyPos -= 0.02
+        if self.dummyPos >= 42:
             self.dummyDirection = 'left'
-        if self.dummyPos <= 42.05:
+        if self.dummyPos <= 22.05:
             self.dummyDirection = 'right'
         return (self.dummyPos, 23.3)
 
