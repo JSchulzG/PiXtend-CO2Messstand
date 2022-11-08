@@ -31,20 +31,20 @@ class ReadSensorData():
                 return (distance, temp)
 
     def heatLeftSide(self):
-        p.digital_out0 = True
-        p.digital_out1 = False
+        self.p.digital_out0 = True
+        self.p.digital_out1 = False
 
     def coldLeftSide(self):
-        p.digital_out0 = False
-        p.digital_out1 = True
+        self.p.digital_out0 = False
+        self.p.digital_out1 = True
 
     def heatRightSide(self):
-        p.digital_out2 = True
-        p.digital_out3 = False
+        self.p.digital_out2 = True
+        self.p.digital_out3 = False
 
     def coldRightSide(self):
-        p.digital_out2 = False
-        p.digital_out3 = True
+        self.p.digital_out2 = False
+        self.p.digital_out3 = True
 
     def read_Data(self):
         data = []
