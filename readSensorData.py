@@ -38,7 +38,7 @@ class ReadSensorData():
             self.dummyPos -= 0.02
         if self.dummyPos >= 42:
             self.dummyDirection = 'left'
-        if self.dummyPos <= 22.05:
+        if self.dummyPos <= 26.05:
             self.dummyDirection = 'right'
         return (self.dummyPos, 23.3)
 

@@ -427,7 +427,11 @@ font: 12pt &quot;Ubuntu&quot;;</string>
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="spinBox_3"/>
+             <widget class="QDoubleSpinBox" name="switchRight">
+              <property name="value">
+               <double>15.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="label_5">
@@ -489,7 +493,7 @@ font: 12pt &quot;Ubuntu&quot;;</string>
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="spinBox"/>
+             <widget class="QDoubleSpinBox" name="switchLeft"/>
             </item>
             <item>
              <widget class="QLabel" name="label_3">

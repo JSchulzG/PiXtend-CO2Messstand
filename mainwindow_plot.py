@@ -112,8 +112,14 @@ class MainWindow(QWidget):
             else:
                 self.sensorList[i].setText('%.1f Bar' % self.value[i])
         position = 42 - self.value[6]
+        if position < self.switchLeft.value():
+            self.sensors.heatLeftSide()
+            self.sensors.coldRightSide()
+        if position > self.switchRight.value():
+            self.sensors.coldLeftSide()
+            self.sensors.heatRightSide()
         self.sliderPosition.setValue(position)
-        self.valuePosition.setText("%i cm" % position)
+        self.valuePosition.setText("%.1f cm" % position)
         self.valueTOut.setText("%.1f °C" % (self.value[7]/100))
         if self.saving is True:
             _now = time.time()
