@@ -37,7 +37,7 @@ class MainWindow(QWidget):
                               self.checkSaveP1, self.checkSaveP2]
 
         self.sliderPosition.setMinimum(1)
-        self.sliderPosition.setMaximum(17)
+        self.sliderPosition.setMaximum(170)
 
         self.valueT1.setText('%.1f °C' % 0)
         self.valueT2.setText('%.1f °C' % 0)
@@ -118,7 +118,7 @@ class MainWindow(QWidget):
         if position > self.switchRight.value():
             self.sensors.coldLeftSide()
             self.sensors.heatRightSide()
-        self.sliderPosition.setValue(position)
+        self.sliderPosition.setValue(position*10)
         self.valuePosition.setText("%.1f cm" % position)
         self.valueTOut.setText("%.1f °C" % (self.value[7]/100))
         if self.saving is True:
